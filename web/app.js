@@ -147,7 +147,12 @@
     sun: ic('<circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>', 2),
     bag: ic('<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>', 2),
     fork: ic('<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2.5 5-2.5 8H17v10"/>', 2),
-    health: ic('<path d="M10 4h4v6h6v4h-6v6h-4v-6H4v-4h6z" fill="currentColor" stroke-width="1"/>', 1)
+    health: ic('<path d="M10 4h4v6h6v4h-6v6h-4v-6H4v-4h6z" fill="currentColor" stroke-width="1"/>', 1),
+    bell: ic('<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/>'),
+    shield: ic('<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="m8.8 12 2.2 2.2 4.2-4.4"/>'),
+    share: ic('<path d="M12 3v12M7.5 7.5 12 3l4.5 4.5"/><path d="M6 11H5v10h14V11h-1"/>'),
+    plusSq: ic('<rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="M12 8.5v7M8.5 12h7"/>'),
+    dots: ic('<circle cx="6" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="18" cy="12" r="1.2" fill="currentColor"/>')
   };
 
   var CATS = {
@@ -311,6 +316,42 @@
       "</div></div>";
   }
 
+  /* Invitación a instalar el portal (y a activar los avisos) */
+  function vInstall() {
+    var sa = isStandalone(), name = firstName(person().nombre), h;
+    var perks = [
+      [I.bell, LT("Avisos para que no te pierdas nada", "Avisos para você não perder nada"), LT("Lo que hacemos hoy, cuántos días faltan y lo que sigue después de cada culto: las vans, la comida y el lugar.", "O que fazemos hoje, quantos dias faltam e o que vem depois de cada culto: as vans, a refeição e o lugar.")],
+      [I.save, LT("Funciona sin internet", "Funciona sem internet"), LT("Tu habitación, el programa y los contactos, siempre a mano.", "Seu quarto, a programação e os contatos, sempre à mão.")],
+      [I.device, LT("Se abre como una app", "Abre como um app"), LT("Con un toque desde tu pantalla de inicio, sin buscar el enlace.", "Com um toque na tela inicial, sem procurar o link.")]
+    ];
+    if (sa) perks = perks.slice(0, 1);
+    h = '<div class="screen dark"><div class="welcome-photo inst-photo"><img class="kenburns" src="img/familia.jpg" alt=""></div><div class="welcome-body inst">' +
+      '<div class="bless rise" style="--i:1">' + esc(name) + "</div>" +
+      "<h1" + rise(2) + ">" + (sa ? LT("¡Ya lo tenés instalado!", "Já está instalado!") : LT("Este portal fue diseñado para vos", "Este portal foi feito para você")) + "</h1>" +
+      '<p class="msg rise" style="--i:3">' + (sa ? LT("Activá los avisos y te vamos a ir contando lo que sigue en cada momento de la convención.", "Ative os avisos e vamos contando o que vem a seguir em cada momento da convenção.")
+        : LT("Instalarlo en tu celular nos ayuda muchísimo a acompañarte durante toda la convención.", "Instalar no seu celular nos ajuda muito a acompanhar você durante toda a convenção.")) + "</p>" +
+      '<ul class="perks">' + perks.map(function (x, i) { return '<li class="rise" style="--i:' + (4 + i) + '">' + x[0] + "<div><b>" + x[1] + "</b><span>" + x[2] + "</span></div></li>"; }).join("") + "</ul>" +
+      '<div class="safe rise" style="--i:7">' + I.shield + "<p>" + LT("<b>Es totalmente seguro.</b> No te pide datos, no ve tus fotos ni tus contactos y casi no ocupa lugar. Cuando termine la convención lo podés desinstalar como cualquier app.", "<b>É totalmente seguro.</b> Não pede dados, não vê suas fotos nem seus contatos e quase não ocupa espaço. Quando a convenção terminar, você pode desinstalar como qualquer app.") + "</p></div>" +
+      '<div class="btn-row rise" style="--i:8"><button class="btn btn-primary press" data-a="instGo">' + (sa ? I.bell + LT("Activar avisos", "Ativar avisos") : I.save + LT("Instalar en mi celular", "Instalar no meu celular")) + "</button>" +
+      '<button class="btn btn-ghost press" data-a="instSkip">' + LT("Ahora no", "Agora não") + "</button></div>" +
+      "</div></div>";
+    return h;
+  }
+  function iosGuide() {
+    var steps = [
+      [I.share, LT("Tocá <b>Compartir</b>", "Toque em <b>Compartilhar</b>"), LT("El cuadrado con la flecha, abajo en Safari. Si no lo ves, tocá primero los tres puntos.", "O quadrado com a seta, embaixo no Safari. Se não aparecer, toque antes nos três pontos.")],
+      [I.dots, LT("Tocá <b>Ver más</b>", "Toque em <b>Ver Mais</b>"), LT("Deslizá hacia abajo en la lista que se abre.", "Deslize para baixo na lista que abre.")],
+      [I.plusSq, LT("Elegí <b>Agregar a inicio</b>", "Escolha <b>Adicionar à Tela de Início</b>"), LT("Después tocá <b>Agregar</b>, arriba a la derecha.", "Depois toque em <b>Adicionar</b>, em cima à direita.")],
+      [I.bell, LT("Abrilo desde el ícono", "Abra pelo ícone"), LT("Entrá de nuevo con tu nombre y tu PIN, y activá los avisos.", "Entre de novo com seu nome e PIN e ative os avisos.")]
+    ];
+    return "<h3>" + LT("Instalar en iPhone", "Instalar no iPhone") + '</h3><ol class="guide">' + steps.map(function (s, i) {
+      return '<li class="rise" style="--i:' + i + '"><span class="gnum">' + (i + 1) + '</span><span class="gico">' + s[0] + "</span><div><b>" + s[1] + "</b><small>" + s[2] + "</small></div></li>";
+    }).join("") + "</ol>";
+  }
+  function otherGuide() {
+    return "<h3>" + LT("Instalar el portal", "Instalar o portal") + "</h3><p>" + LT("Abrí el menú del navegador (los tres puntos <b>⋮</b>) y elegí <b>«Instalar app»</b> o <b>«Agregar a pantalla de inicio»</b>.", "Abra o menu do navegador (os três pontos <b>⋮</b>) e escolha <b>«Instalar app»</b> ou <b>«Adicionar à tela inicial»</b>.") + "</p>";
+  }
+
   function vTutorial() {
     var s = "", dots = "";
     T("tut").forEach(function (sl, i) {
@@ -395,6 +436,7 @@
       '<img class="cover-logo fade" src="' + esc(D.evento.logo) + '" alt="' + esc(D.evento.iglesia) + '"><div class="cover-in" id="countdown">' + countdownHTML() + "</div></section>";
     (D.avisos || []).forEach(function (av) { h += '<div class="notice">' + esc(av.texto) + "</div>"; });
     h += '<div class="pad">';
+    if (eventOver()) h += blk(thanksHTML());
     var ahora = ahoraHTML();
     if (ahora) h += blk(ahora);
 
@@ -437,7 +479,7 @@
     h += '<div class="pad">' + blk('<h2 class="h">' + T("useful") + '</h2><div class="rows">' +
       '<button class="row" data-a="wifi">' + I.wifi + '<span class="txt">' + T("wifi") + "<small>" + T("wifiSub") + "</small></span>" + I.chev.replace("<svg", '<svg class="chev"') + "</button>" +
       '<button class="row sos" data-a="sos">' + I.alert + '<span class="txt">' + T("sos") + "<small>" + T("sosSub") + "</small></span>" + I.chev.replace("<svg", '<svg class="chev"') + "</button>" +
-      offlineRow() + installRow() + "</div>");
+      offlineRow() + installRow() + notifRow() + "</div>");
     if (D.demo) h += '<p class="foot">' + T("demoNote") + "</p>";
     return h + "</div>";
   }
@@ -452,6 +494,27 @@
   function installRow() {
     if (isStandalone() || (!installEvt && !isIOS())) return "";
     return '<button class="row" data-a="install">' + I.device + '<span class="txt">' + T("install") + "<small>" + T("installSub") + "</small></span>" + I.chev.replace("<svg", '<svg class="chev"') + "</button>";
+  }
+  // Avisos: en iPhone solo funcionan con el portal instalado
+  function canNotify() { return "Notification" in window && "serviceWorker" in navigator; }
+  function notifRow() {
+    if (!canNotify()) return "";
+    var st = Notification.permission, sub;
+    if (st === "granted") sub = LT("Activados · tocá para probar uno", "Ativados · toque para testar um");
+    else if (st === "denied") sub = LT("Bloqueados: permitilos en los ajustes del navegador", "Bloqueados: permita nos ajustes do navegador");
+    else sub = LT("Lo de hoy, los días que faltan y lo que sigue", "O de hoje, os dias que faltam e o que vem depois");
+    return '<button class="row" data-a="notif">' + I.bell + '<span class="txt">' + (st === "granted" ? LT("Avisos", "Avisos") : LT("Activar avisos", "Ativar avisos")) + "<small>" + sub + "</small></span>" +
+      (st === "granted" ? '<span class="end" style="color:var(--green)">✓</span>' : I.chev.replace("<svg", '<svg class="chev"')) + "</button>";
+  }
+  function eventOver() { return NOW() > dateObj(D.evento.fin, "18:00"); }
+  function thanksHTML() {
+    var com = D.evento.comunicaciones;
+    return '<section class="thanks-card"><figure><img src="img/aplauso.jpg" alt="Hermanos en la convención"></figure><div class="thanks-in">' +
+      "<h2>" + LT("¡Gracias por acompañarnos!", "Obrigado por estar conosco!") + "</h2>" +
+      "<p>" + LT("Fue una alegría tenerte en nuestra convención. Esperamos que haya sido de gran bendición para tu vida.", "Foi uma alegria ter você na nossa convenção. Esperamos que tenha sido de grande bênção para sua vida.") + "</p>" +
+      "<p>" + LT("Nos encantaría que nos compartas <b>las fotos, videos y testimonios</b> de lo que viviste: con ellos vamos a armar un recuerdo de todas las delegaciones.", "Adoraríamos que você compartilhasse <b>as fotos, vídeos e testemunhos</b> do que viveu: com eles vamos montar uma lembrança de todas as delegações.") + "</p>" +
+      (com ? '<button class="btn wa-btn press" data-a="waCom">' + I.wa + LT("Enviar a Comunicaciones", "Enviar para Comunicações") + "</button><small>" + esc(com.nombre) + "</small>" : "") +
+      '<p class="thanks-note">' + LT("Cuando quieras, podés desinstalar el portal como cualquier app. Dios te bendiga y buen viaje de regreso.", "Quando quiser, pode desinstalar o portal como qualquer app. Deus te abençoe e boa viagem de volta.") + "</p></div></section>";
   }
 
   /* ----- Mapa ----- */
@@ -671,7 +734,7 @@
       '<button class="row" data-a="showWelcome">' + I.heart + '<span class="txt">' + T("seeWelcome") + "</span></button>" +
       '<button class="row" data-a="showTut">' + I.book + '<span class="txt">' + T("seeTut") + "</span></button>" +
       '<button class="row" data-a="tour">' + I.map + '<span class="txt">' + LT("Ver el paseo guiado", "Ver o tour guiado") + "<small>" + LT("El portal se recorre solo, en medio minuto", "O portal se apresenta sozinho, em meio minuto") + "</small></span></button>" +
-      offlineRow() + installRow() +
+      offlineRow() + installRow() + notifRow() +
       (D.demo ? '<button class="row" data-a="sim">' + I.cal + '<span class="txt">' + LT("Probar: simular la hora", "Testar: simular a hora") + "<small>" + LT("Para ver Inicio como durante la convención", "Para ver o Início como durante a convenção") + '</small></span><span class="end">' + esc(simLabel()) + "</span></button>" : "") +
       '<button class="row sos" data-a="logout">' + I.out + '<span class="txt">' + T("switchUser") + "</span></button></div>";
     var cred = D.lugares.filter(function (l) { return l.cred; });
@@ -720,7 +783,7 @@
   }
   function ahoraInner() {
     var st = agendaState();
-    if (!inEventWindow(st.now)) return "";
+    if (!inEventWindow(st.now) || eventOver()) return "";
     var title, msg, steps = [], cur = st.cur, nx = st.next;
     var follow = nx.slice(0, nx[0] && nx[0].tipo === "traslado" ? 2 : 1);
     var bless = LT("Esperamos que el culto haya sido de gran bendición. Te recordamos lo que sigue en el cronograma:", "Esperamos que o culto tenha sido de grande bênção. Lembramos o que vem a seguir na programação:");
@@ -1089,7 +1152,7 @@
     document.documentElement.lang = S.lang === "pt" ? "pt-BR" : "es";
     var key = S.view + "|" + (S.view === "app" ? S.tab : "");
     var same = key === render._last;
-    $app.innerHTML = { splash: vSplash, flags: vFlags, names: vNames, pin: vPin, welcome: vWelcome, tutorial: vTutorial, app: vApp }[S.view]();
+    $app.innerHTML = { splash: vSplash, flags: vFlags, names: vNames, pin: vPin, welcome: vWelcome, install: vInstall, tutorial: vTutorial, app: vApp }[S.view]();
     if (same) { // misma pantalla: sin volver a animar la entrada
       var anim = $app.querySelectorAll(".rise,.pop,.fade,.tab-in,.kenburns");
       for (var i = 0; i < anim.length; i++) anim[i].style.animation = "none";
@@ -1103,14 +1166,19 @@
   function afterSplash() {
     session.set("splashSeen", true);
     var saved = store.get("person");
-    if (saved && byId(D.personas, saved)) { S.view = store.get("seen_" + saved) ? "app" : "welcome"; }
+    if (saved && byId(D.personas, saved)) { S.view = entryView(saved); }
     else S.view = "flags";
     render();
   }
+  function entryView(id) {
+    if (!store.get("seen_" + id)) return "welcome";
+    if (isStandalone() && wantsInstallScreen()) return "install"; // primera vez que abre la app instalada
+    return "app";
+  }
   function login(id) {
     S.personId = id; store.set("person", id);
-    S.view = store.get("seen_" + id) ? "app" : "welcome"; S.tab = "inicio";
-    render();
+    S.view = entryView(id); S.tab = "inicio";
+    render(); notifyCheck();
   }
   function pressKey(k) {
     if (S.pin.length >= 4) return;
@@ -1147,15 +1215,76 @@
     (D.evento.wifi || []).forEach(function (w) { h += "<div><span>" + esc(w.lugar) + "</span><b>" + esc(w.red) + "<br>" + T("password") + ": " + esc(w.clave) + "</b></div>"; });
     modal(h + "</div>");
   }
-  function doInstall() {
-    if (installEvt) { installEvt.prompt(); installEvt.userChoice.then(function () { installEvt = null; render(); }); return; }
-    modal("<h3>" + T("iosTitle") + "</h3><p>" + T("iosSteps") + "</p>");
+  // Instalar: Android abre la ventana del sistema; iPhone muestra los pasos de Safari
+  function doInstall(then) {
+    if (installEvt) {
+      installEvt.prompt();
+      installEvt.userChoice.then(function (r) { installEvt = null; if (r && r.outcome === "accepted") askNotif(then); else if (then) then(); else render(); });
+      return;
+    }
+    modal(isIOS() ? iosGuide() : otherGuide());
+    if (then) { var m = document.querySelector("#modal [data-a=closeModal]"); if (m) { m.textContent = LT("Entendido", "Entendi"); m.setAttribute("data-a", "instDone"); m.className = "btn btn-primary press"; } }
+  }
+
+  /* ----- Avisos ----- */
+  // Guarda quién es la persona para que el service worker sepa qué avisos le tocan
+  function syncNotifMeta() {
+    if (!window.CONV_NOTIF || !S.personId) return Promise.resolve();
+    return CONV_NOTIF.getMeta().then(function (m) {
+      if (m.person === S.personId && m.lang === S.lang) return;
+      if (m.person !== S.personId) m.sent = [];
+      m.person = S.personId; m.lang = S.lang;
+      return CONV_NOTIF.setMeta(m);
+    });
+  }
+  function showNotif(n) {
+    if (!n || !canNotify() || Notification.permission !== "granted") return;
+    navigator.serviceWorker.ready.then(function (reg) { return reg.showNotification(n.title, CONV_NOTIF.options(n)); }).catch(function () {});
+  }
+  function notifyCheck() {
+    if (!canNotify() || Notification.permission !== "granted" || !S.personId || !window.CONV_NOTIF) return;
+    syncNotifMeta().then(function () { return CONV_NOTIF.check(D, Date.now()); }).then(showNotif).catch(function () {});
+  }
+  function registerPeriodic() {
+    if (!("serviceWorker" in navigator)) return;
+    navigator.serviceWorker.ready.then(function (reg) {
+      if (!reg.periodicSync) return;
+      return navigator.permissions.query({ name: "periodic-background-sync" }).then(function (p) {
+        if (p.state === "granted") return reg.periodicSync.register("conv-avisos", { minInterval: 3 * 36e5 });
+      });
+    }).catch(function () {});
+  }
+  function askNotif(then) {
+    if (!canNotify()) { if (isIOS() && !isStandalone()) modal(iosGuide()); else toast(LT("Este navegador no permite avisos.", "Este navegador não permite avisos.")); if (then) then(); return; }
+    Notification.requestPermission().then(function (st) {
+      if (st === "granted") {
+        syncNotifMeta().then(function () {
+          registerPeriodic();
+          showNotif({ k: "hola", title: LT("¡Avisos activados!", "Avisos ativados!"), body: LT("Te vamos a avisar lo que hacemos cada día, cuántos días faltan y lo que sigue después de cada culto.", "Vamos avisar o que fazemos cada dia, quantos dias faltam e o que vem depois de cada culto."), tab: "programa" });
+        });
+      } else if (st === "denied") toast(LT("Los avisos quedaron bloqueados. Podés activarlos en los ajustes.", "Os avisos ficaram bloqueados. Você pode ativá-los nos ajustes."));
+      if (then) then(); else render();
+    });
+  }
+  // Ejemplo para ver cómo llega un aviso
+  function testNotif() {
+    showNotif({ k: "prueba", title: LT("¡Qué bendición!", "Que bênção!"), body: LT("Esperamos que el culto haya sido de gran bendición. Te recordamos lo que sigue: 11:45 salen las vans hacia la Iglesia Curva de Maroñas para el almuerzo. Tocá para ver el programa.", "Esperamos que o culto tenha sido de grande bênção. Lembramos o que vem a seguir: 11:45 saem as vans para a Igreja Curva de Maroñas para o almoço. Toque para ver a programação."), tab: "programa" });
+    toast(LT("Te mandamos un aviso de ejemplo", "Enviamos um aviso de exemplo"));
+  }
+  function wantsInstallScreen() {
+    if (isStandalone()) return canNotify() && Notification.permission === "default" && !store.get("askedSA");
+    return !store.get("askedInstall");
+  }
+  // Después de la invitación a instalar, sigue la pantalla que correspondía
+  function afterInstall() {
+    store.set(isStandalone() ? "askedSA" : "askedInstall", true);
+    S.view = store.get("seen_" + S.personId) ? "app" : "tutorial"; render();
   }
 
   /* ----- Guardar para usar sin internet ----- */
   /* El mapa de OpenStreetMap no permite descargar zonas enteras por adelantado:
      el portal guarda automáticamente las partes del mapa que la persona ya miró (sw.js). */
-  var SHELL = ["./", "index.html", "styles.css", "fonts.css", "app.js", "data.js", "manifest.webmanifest", "vendor/leaflet/leaflet.js", "vendor/leaflet/leaflet.css",
+  var SHELL = ["./", "index.html", "styles.css", "fonts.css", "app.js", "data.js", "notif.js", "manifest.webmanifest", "vendor/leaflet/leaflet.js", "vendor/leaflet/leaflet.css",
     "icons/icon-192.png", "icons/icon-512.png", "fonts/oswald-300_600.woff2", "fonts/poppins-400.woff2", "fonts/poppins-500.woff2", "fonts/poppins-600.woff2", "fonts/poppins-700.woff2",
     "img/aeropuerto.jpg", "img/aplauso.jpg", "img/artigas.jpg", "img/buquebus.jpg", "img/cerro.jpg", "img/culto1.jpg", "img/culto2.jpg", "img/culto4.jpg", "img/curva-grupo.jpg", "img/curva.jpg", "img/familia.jpg", "img/hotel.jpg", "img/jovenes.jpg", "img/logo.png", "img/montevideo.jpg", "img/musica.jpg", "img/ofrenda.jpg", "img/oracion2.jpg", "img/predica.jpg", "img/salon.jpg", "img/teatro.jpg", "img/lugares/18julio.jpg", "img/lugares/atlantida.jpg", "img/lugares/casapueblo.jpg", "img/lugares/centenario.jpg", "img/lugares/cerro.jpg", "img/lugares/ciudadvieja.jpg", "img/lugares/colonia.jpg", "img/lugares/legislativo.jpg", "img/lugares/matriz.jpg", "img/lugares/mercado.jpg", "img/lugares/mirador.jpg", "img/lugares/piriapolis.jpg", "img/lugares/pocitos.jpg", "img/lugares/punta.jpg", "img/lugares/rambla.jpg", "img/lugares/rodo.jpg", "img/lugares/s_puntacarretas.jpg", "img/lugares/trescruces.jpg"];
   function saveOffline() {
@@ -1163,7 +1292,7 @@
     if (!("caches" in window)) return toast("Este navegador no permite guardar sin internet.");
     if (!navigator.onLine) return toast(T("offline"));
     S.dl = { done: 0, total: SHELL.length }; refreshOff();
-    caches.open("conv-shell-v4").then(function (shellC) {
+    caches.open("conv-shell-v5").then(function (shellC) {
       function step() { S.dl.done++; refreshOff(); }
       return Promise.all(SHELL.map(function (u) { return fetch(u, { cache: "reload" }).then(function (r) { if (r.ok) return shellC.put(u, r); }).catch(function () {}).then(step); }));
     }).then(function () {
@@ -1184,7 +1313,24 @@
       case "person": S.personId = v; S.pin = ""; S.view = "pin"; render(); break;
       case "key": pressKey(v); break;
       case "keydel": S.pin = S.pin.slice(0, -1); render(); break;
-      case "welcomeNext": S.view = store.get("seen_" + S.personId) ? "app" : "tutorial"; render(); break;
+      case "welcomeNext": S.view = store.get("seen_" + S.personId) ? "app" : wantsInstallScreen() ? "install" : "tutorial"; render(); break;
+      case "instGo":
+        if (isStandalone()) askNotif(afterInstall);
+        else doInstall(afterInstall);
+        break;
+      case "instDone": closeModal(); if (canNotify() && Notification.permission === "default") askNotif(afterInstall); else afterInstall(); break;
+      case "instSkip": afterInstall(); break;
+      case "notif":
+        if (!canNotify()) break;
+        if (Notification.permission === "granted") testNotif();
+        else if (Notification.permission === "denied") toast(LT("Los avisos están bloqueados: activalos en los ajustes del navegador para este sitio.", "Os avisos estão bloqueados: ative nos ajustes do navegador para este site."));
+        else askNotif();
+        break;
+      case "waCom":
+        var com = D.evento.comunicaciones, me = person();
+        if (D.demo) { toast(T("demoWa")); break; }
+        window.open("https://wa.me/" + digits(com.whatsapp) + "?text=" + encodeURIComponent(LT("Hola, soy " + me.nombre + " de la delegación de " + country(me.pais).nombre + ". Les comparto fotos y mi testimonio de la convención: ", "Olá, sou " + me.nombre + " da delegação do " + country(me.pais).nombre + ". Compartilho fotos e meu testemunho da convenção: ")), "_blank");
+        break;
       case "tutNext":
         var tr = document.getElementById("tutTrack"), i = Math.round(tr.scrollLeft / tr.clientWidth);
         if (i >= tr.children.length - 1) endTutorial(); else tr.scrollTo({ left: (i + 1) * tr.clientWidth, behavior: "smooth" });
@@ -1217,7 +1363,7 @@
       case "sos": location.href = "tel:" + D.evento.emergencias; break;
       case "wifi": showWifi(); break;
       case "closeModal": closeModal(); break;
-      case "lang": S.lang = v; store.set("lang", v); render(); break;
+      case "lang": S.lang = v; store.set("lang", v); render(); syncNotifMeta(); break;
       case "showWelcome": S.view = "welcome"; render(); break;
       case "showTut": S.view = "tutorial"; render(); break;
       case "tour": startTour(); break;
@@ -1252,6 +1398,14 @@
     cd.innerHTML = countdownHTML();
     cd.querySelectorAll("b[data-k]").forEach(function (b) { if (old[b.getAttribute("data-k")] !== b.textContent) b.classList.add("tick"); });
   }, 15000);
+  // Avisos mientras el portal está abierto o vuelve a primer plano
+  setInterval(notifyCheck, 60000);
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") notifyCheck(); });
+  // Al tocar un aviso con el portal ya abierto: ir a la sección del aviso
+  if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", function (e) {
+    var ir = e.data && e.data.ir;
+    if (ir && S.view === "app" && TAB_ORDER.indexOf(ir) >= 0) { S.prevTab = S.tab; S.tab = ir; S.day = null; render(); }
+  });
   window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); installEvt = e; if (S.view === "app" && (S.tab === "inicio" || S.tab === "perfil")) render(); });
   if ("serviceWorker" in navigator && location.protocol !== "file:") window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
 
@@ -1262,6 +1416,7 @@
     try {
       Object.keys(localStorage).forEach(function (k) { if (k.indexOf("conv_") === 0) localStorage.removeItem(k); });
       Object.keys(sessionStorage).forEach(function (k) { if (k.indexOf("conv_") === 0) sessionStorage.removeItem(k); });
+      if (window.caches) caches.delete("conv-meta");
     } catch (e) {}
   }
 
@@ -1288,6 +1443,10 @@
     var sp = byId(D.personas, saved);
     S.personId = saved; S.country = sp.pais; S.lang = store.get("lang") || country(sp.pais).lang;
   } else if (saved) store.del("person");
+  // Al abrir el portal desde un aviso (#ir=programa): mostrar esa sección
+  var irM = /[#&]ir=(\w+)/.exec(location.hash);
+  if (irM && TAB_ORDER.indexOf(irM[1]) >= 0) { S.tab = irM[1]; try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} }
+  setTimeout(notifyCheck, 2500);
   // Solo en la versión de ejemplo: abrir una pantalla directa para revisar el diseño (#s=app&p=br1&t=mapa)
   var q = D.demo && location.hash.length > 1 ? location.hash.slice(1).split("&").reduce(function (o, kv) { var x = kv.split("="); o[x[0]] = decodeURIComponent(x[1] || ""); return o; }, {}) : null;
   if (q && q.s) {

@@ -610,3 +610,43 @@ h2.h { font-family: var(--display); font-weight: 400; font-size: 26px; text-tran
 
 .toast { position: fixed; left: 50%; bottom: calc(var(--nav-h) + var(--safe-b) + 18px); z-index: 2000; transform: translate(-50%, 16px); opacity: 0; pointer-events: none; background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 999px; font-size: 14px; font-weight: 500; width: max-content; max-width: min(92vw, 440px); text-align: center; transition: opacity .25s, transform .35s var(--spring); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Invitación a instalar ---------- */
+.inst-photo { height: 30vh; min-height: 190px; }
+.welcome-body.inst h1 { font-size: 44px; line-height: 1; }
+.welcome-body.inst .bless { font-size: 20px; }
+.perks { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 14px; }
+.perks li { display: flex; gap: 14px; align-items: flex-start; }
+.perks li > svg { flex: none; width: 40px; height: 40px; padding: 9px; border-radius: 12px; background: rgba(232,165,92,.14); color: var(--amber); }
+.perks b { display: block; font-size: 15.5px; font-weight: 600; }
+.perks span { display: block; font-size: 14px; line-height: 1.45; color: rgba(255,255,255,.72); margin-top: 2px; }
+.safe { display: flex; gap: 12px; margin-top: 20px; padding: 14px; border-radius: 14px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); }
+.safe svg { flex: none; width: 26px; height: 26px; color: #6FCF97; }
+.safe p { font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,.8); margin: 0; }
+.safe b { color: #fff; }
+.welcome-body.inst .btn-row { margin-top: 22px; }
+@media (max-height: 700px) { .inst-photo { height: 22vh; min-height: 140px; } .welcome-body.inst h1 { font-size: 36px; } .perks { gap: 10px; margin-top: 14px; } }
+@media (max-width: 360px) { .welcome-body.inst h1 { font-size: 34px; } }
+
+/* Pasos para instalar en iPhone */
+.guide { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+.guide li { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: var(--cream); }
+.gnum { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--orange-ink); color: #fff; font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+.gico { flex: none; width: 40px; height: 40px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); display: grid; place-items: center; color: #0A84FF; }
+.gico svg { width: 22px; height: 22px; }
+.guide div > b { display: block; font-size: 15px; font-weight: 500; }
+.guide b b, .guide small b { display: inline; font-weight: 700; color: var(--ink); }
+.guide small { display: block; font-size: 13px; line-height: 1.4; color: var(--muted); margin-top: 2px; }
+
+/* Gracias al terminar la convención */
+.thanks-card { margin-top: 22px; background: var(--maroon); color: #fff; border-radius: var(--r); overflow: hidden; }
+.thanks-card figure { margin: 0; aspect-ratio: 16 / 9; overflow: hidden; }
+.thanks-card figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thanks-in { padding: 18px; }
+.thanks-in h2 { font-family: var(--display); font-weight: 400; font-size: 32px; line-height: 1.05; text-transform: uppercase; }
+.thanks-in p { font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.88); margin-top: 10px; }
+.thanks-in .wa-btn { margin-top: 16px; background: #25D366; color: #fff; font-size: 18px; min-height: 52px; }
+.thanks-in .wa-btn:active { background: #1DA851; }
+.thanks-in small { display: block; text-align: center; font-size: 12.5px; color: rgba(255,255,255,.6); margin-top: 8px; }
+.thanks-in .thanks-note { font-size: 13px; color: rgba(255,255,255,.65); border-top: 1px solid rgba(255,255,255,.12); padding-top: 12px; margin-top: 16px; }
+.welcome-body.inst .btn-row { position: sticky; bottom: calc(-1 * (var(--safe-b) + 24px)); z-index: 2; margin-left: calc(-1 * var(--gut)); margin-right: calc(-1 * var(--gut)); padding: 26px var(--gut) calc(var(--safe-b) + 14px); background: linear-gradient(to bottom, rgba(26,11,9,0), var(--night) 34%); }

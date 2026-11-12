@@ -31,6 +31,8 @@ window.DATA = {
     logo: "img/logo.png",
     anterior: "Convención 2025 · «Llamados para servir»",
     emergencias: "911",
+    // Al terminar la convención, el portal invita a mandar fotos y testimonios a este WhatsApp
+    comunicaciones: { nombre: "Comunicaciones IEANJESÚS Uruguay", whatsapp: "+598 99 000 012" },
     wifi: [
       { lugar: "Hotel Esplendor y Teatro Cervantes", red: "(a confirmar)", clave: "(a confirmar)" }
     ]

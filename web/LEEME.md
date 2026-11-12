@@ -57,3 +57,11 @@ unos 55 segundos: se desenfoca todo, una flecha señala cada parte y las pestañ
 ## Publicarla
 Subir la carpeta `web` completa a un hosting estático con HTTPS (por ejemplo Netlify o GitHub Pages).
 HTTPS es necesario para que funcione sin internet y se pueda instalar como app.
+
+## Instalación y avisos
+
+- Después de la bienvenida aparece «Este portal fue diseñado para vos», que invita a instalarlo. En Android abre la ventana de instalar; en iPhone muestra los pasos de Safari (Compartir → Ver más → Agregar a inicio).
+- Al abrir el portal ya instalado por primera vez, pide activar los avisos.
+- Los avisos se calculan en cada celular a partir del programa (`notif.js`): días que faltan, lo de hoy, 20 min antes de cultos y vans, «Esperamos que el culto haya sido de gran bendición…» y el agradecimiento final.
+- Sin servidor, los avisos llegan cuando el portal está abierto o vuelve a abrirse; en Android instalado, además, el teléfono lo despierta de vez en cuando. En iPhone solo se ven con el portal instalado.
+- Al terminar la convención, Inicio muestra el agradecimiento y el botón para mandar fotos y testimonios al WhatsApp de `evento.comunicaciones` (data.js).
