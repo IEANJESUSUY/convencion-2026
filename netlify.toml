@@ -1,0 +1,16 @@
+# Publicación en Netlify: solo la carpeta "web".
+[build]
+  publish = "web"
+
+# Que Google y otros buscadores no muestren el portal: solo entra quien tiene el enlace.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Referrer-Policy = "same-origin"
+
+# El service worker siempre se revisa, para que los cambios lleguen rápido a los teléfonos.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"

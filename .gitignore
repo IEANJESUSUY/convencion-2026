@@ -1,0 +1,10 @@
+# Planillas con datos personales: nunca se suben
+*.xlsx
+*.xls
+*.csv
+
+# Archivos de trabajo locales
+.claude/
+.taste-skill/
+Thumbs.db
+desktop.ini
