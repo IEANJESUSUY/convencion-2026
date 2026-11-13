@@ -38,7 +38,7 @@
       sameHotel: "<b>La convención es en tu mismo hotel:</b> el Teatro Cervantes, con entrada por calle Soriano.",
       seeMap: "Ver en mapa", directions: "Cómo llegar",
       arrival: "Tu llegada", receives: "Te recibe", driver: "Tu chofer", upNext: "Lo próximo", useful: "Útil",
-      ourConv: "Nuestra convención", toVisit: "Para conocer", toVisitSub: "Cerca de tu alojamiento, ordenado por distancia.",
+      ourConv: "Lo que vivimos juntos", toVisit: "Imperdibles de Montevideo", toVisitSub: "Lo que no te podés perder, empezando por lo más lindo.",
       trips: "Excursiones", tripsSub: "Para un día libre, a una o dos horas de Montevideo.", highlights: "Destacados", credits: "Créditos de fotos",
       creditsSub: "Fotos de la convención: IEANJESÚS Uruguay. Fotos de lugares: Wikimedia Commons, con licencia libre.", mapBy: "Mapa: Esri · © OpenStreetMap",
       cultoPhotoNote: "Foto de la convención anterior",
@@ -80,7 +80,7 @@
       sameHotel: "<b>A convenção é no seu próprio hotel:</b> o Teatro Cervantes, com entrada pela rua Soriano.",
       seeMap: "Ver no mapa", directions: "Como chegar",
       arrival: "Sua chegada", receives: "Quem te recebe", driver: "Seu motorista", upNext: "O próximo", useful: "Útil",
-      ourConv: "Nossa convenção", toVisit: "Para conhecer", toVisitSub: "Perto da sua hospedagem, por distância.",
+      ourConv: "O que vivemos juntos", toVisit: "Imperdíveis de Montevidéu", toVisitSub: "O que você não pode perder, começando pelo mais bonito.",
       trips: "Passeios", tripsSub: "Para um dia livre, a uma ou duas horas de Montevidéu.", highlights: "Destaques", credits: "Créditos das fotos",
       creditsSub: "Fotos da convenção: IEANJESÚS Uruguai. Fotos dos lugares: Wikimedia Commons, com licença livre.", mapBy: "Mapa: Esri · © OpenStreetMap",
       cultoPhotoNote: "Foto da convenção anterior",
@@ -152,6 +152,7 @@
     shield: ic('<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="m8.8 12 2.2 2.2 4.2-4.4"/>'),
     share: ic('<path d="M12 3v12M7.5 7.5 12 3l4.5 4.5"/><path d="M6 11H5v10h14V11h-1"/>'),
     plusSq: ic('<rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="M12 8.5v7M8.5 12h7"/>'),
+    music: ic('<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>'),
     dots: ic('<circle cx="6" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="18" cy="12" r="1.2" fill="currentColor"/>')
   };
 
@@ -437,6 +438,8 @@
     (D.avisos || []).forEach(function (av) { h += '<div class="notice">' + esc(av.texto) + "</div>"; });
     h += '<div class="pad">';
     if (eventOver()) h += blk(thanksHTML());
+    var prep = prepHTML();
+    if (prep) h += blk(prep);
     var ahora = ahoraHTML();
     if (ahora) h += blk(ahora);
 
@@ -465,20 +468,20 @@
 
     // Para conocer cerca del alojamiento
     var base = myBase();
-    var near = D.lugares.filter(function (l) { return l.foto && l.cat === "turismo"; }).sort(function (x, y) { return haversine(base, x) - haversine(base, y); }).slice(0, 8);
+    var near = D.lugares.filter(function (l) { return l.foto && l.cat === "turismo"; }).sort(function (x, y) { return (y.imperdible ? 1 : 0) - (x.imperdible ? 1 : 0) || haversine(base, x) - haversine(base, y); }).slice(0, 10);
     h += blk('<div class="pad"><h2 class="h">' + T("toVisit") + '</h2><p class="lede">' + T("toVisitSub") + "</p></div>" + placeCards(near));
     var far = D.lugares.filter(function (l) { return l.foto && l.cat === "excursion"; });
     h += blk('<div class="pad"><h2 class="h">' + T("trips") + '</h2><p class="lede">' + T("tripsSub") + "</p></div>" + placeCards(far));
 
     // Galería de la convención anterior (fotos completas, sin recortar)
-    h += blk('<div class="pad"><h2 class="h">' + T("ourConv") + '</h2><p class="lede">' + esc(D.evento.anterior) + "</p></div>" +
+    h += blk('<div class="pad"><h2 class="h">' + T("ourConv") + '</h2><p class="lede">' + LT("Fotos de nuestra convención anterior · ", "Fotos da nossa convenção anterior · ") + esc(D.evento.anterior) + "</p></div>" +
       '<div class="hscroll gallery">' + (D.galeria || []).map(function (g) {
         return '<figure class="gimg press" data-a="photo" data-v="' + esc(g.foto) + '"><img src="' + g.foto + '" alt="' + esc(g.texto) + '" loading="lazy"><figcaption>' + esc(g.texto) + "</figcaption></figure>";
       }).join("") + "</div>");
 
     h += '<div class="pad">' + blk('<h2 class="h">' + T("useful") + '</h2><div class="rows">' +
       '<button class="row sos" data-a="sos">' + I.alert + '<span class="txt">' + T("sos") + "<small>" + T("sosSub") + "</small></span>" + I.chev.replace("<svg", '<svg class="chev"') + "</button>" +
-      offlineRow() + installRow() + notifRow() + "</div>");
+      consRow() + shareRow() + offlineRow() + installRow() + notifRow() + "</div>");
     if (D.demo) h += '<p class="foot">' + T("demoNote") + "</p>";
     return h + "</div>";
   }
@@ -514,6 +517,69 @@
       "<p>" + LT("Nos encantaría que nos compartas <b>las fotos, videos y testimonios</b> de lo que viviste: con ellos vamos a armar un recuerdo de todas las delegaciones.", "Adoraríamos que você compartilhasse <b>as fotos, vídeos e testemunhos</b> do que viveu: com eles vamos montar uma lembrança de todas as delegações.") + "</p>" +
       (com ? '<button class="btn wa-btn press" data-a="waCom">' + I.wa + LT("Enviar a Comunicaciones", "Enviar para Comunicações") + "</button><small>" + esc(com.nombre) + "</small>" : "") +
       '<p class="thanks-note">' + LT("Cuando quieras, podés desinstalar el portal como cualquier app. Dios te bendiga y buen viaje de regreso.", "Quando quiser, pode desinstalar o portal como qualquer app. Deus te abençoe e boa viagem de volta.") + "</p></div></section>";
+  }
+
+  /* ----- «Preparándonos»: los 10 días antes (preparacion.js) ----- */
+  function prepEntry() {
+    var P = window.PREPARACION; if (!P) return null;
+    var n = Math.round((dateObj(D.evento.inicio) - dateObj(isoDay(NOW()))) / 864e5);
+    for (var i = 0; i < P.length; i++) if (P[i].falta === n) return P[i];
+    return null;
+  }
+  function prepHTML() {
+    var pr = prepEntry(); if (!pr) return "";
+    var tx = pr[S.lang] || pr.es, one = pr.falta === 1;
+    return '<section class="prep-card"><div class="prep-top"><span class="prep-n"><b>' + pr.falta + "</b><small>" + (one ? LT("día", "dia") : LT("días", "dias")) + "</small></span><div><small>" + LT("Preparándonos", "Preparando-nos") + "</small><h2>" +
+      (one ? LT("¡Mañana empieza!", "Amanhã começa!") : LT("Faltan " + pr.falta + " días", "Faltam " + pr.falta + " dias")) + "</h2></div></div>" +
+      "<blockquote>«" + esc(tx.v) + "»<cite>" + esc(pr.cita) + "</cite></blockquote><p>" + esc(tx.t) + '</p><p class="prep-o">' + I.heart + "<span>" + esc(tx.o) + "</span></p>" +
+      (tx.invitar ? '<button class="act press" data-a="share">' + I.share + LT("Pasar la invitación", "Passar o convite") + "</button>" : "") + "</section>";
+  }
+
+  /* ----- Compartir la invitación (discreto: el menú normal del celular) ----- */
+  function shareInvite() {
+    var url = D.invitacionUrl || "https://ieanjesusuy.github.io/convencion-2026/nacional/";
+    var txt = LT("Te comparto la invitación a nuestra Convención Nacional 2026 «Transformados a su imagen». 5 y 6 de diciembre, Teatro Cervantes, Montevideo. Acá están todos los detalles:",
+      "Compartilho o convite para a nossa Convenção Nacional 2026 «Transformados à sua imagem». 5 e 6 de dezembro, Teatro Cervantes, Montevidéu. Aqui estão todos os detalhes:");
+    if (navigator.share) navigator.share({ title: D.evento.nombre, text: txt, url: url }).catch(function () {});
+    else window.open("https://wa.me/?text=" + encodeURIComponent(txt + " " + url), "_blank");
+  }
+  function shareRow() {
+    return '<button class="row" data-a="share">' + I.share + '<span class="txt">' + LT("Compartir la invitación", "Compartilhar o convite") + "<small>" + LT("Para alguien que quieras que venga", "Para alguém que você queira que venha") + "</small></span>" + I.chev.replace("<svg", '<svg class="chev"') + "</button>";
+  }
+
+  /* ----- Oración y consejería: WhatsApp privado, sin chat en la página ----- */
+  function consRow() {
+    var c = D.evento.consejeria; if (!c) return "";
+    return '<button class="row" data-a="waCons">' + I.heart + '<span class="txt">' + LT("Oración y consejería", "Oração e aconselhamento") + "<small>" + LT("Hablá en privado con un pastor por WhatsApp", "Fale em particular com um pastor pelo WhatsApp") + "</small></span>" + I.chev.replace("<svg", '<svg class="chev"') + "</button>";
+  }
+  function openCons() {
+    var c = D.evento.consejeria;
+    if (D.demo) return toast(LT("Número de ejemplo: en la versión final abre WhatsApp", "Número de exemplo: na versão final abre o WhatsApp"));
+    window.open("https://wa.me/" + digits(c.whatsapp) + "?text=" + encodeURIComponent(LT("Hola, Dios le bendiga. Escribo desde el portal de la convención: necesito oración y hablar con alguien.", "Olá, Deus te abençoe. Escrevo do portal da convenção: preciso de oração e falar com alguém.")), "_blank");
+  }
+
+  /* ----- Música de la convención (musica.js) ----- */
+  function progSeg() {
+    return '<div class="pseg"><button class="' + (S.progView !== "musica" ? "on" : "") + '" data-a="pview" data-v="cultos">' + I.cal + LT("Programa", "Programa") + '</button><button class="' + (S.progView === "musica" ? "on" : "") + '" data-a="pview" data-v="musica">' + I.music + LT("Música", "Música") + "</button></div>";
+  }
+  function musicaHTML() {
+    var M = window.MUSICA; if (!M) return "";
+    var cultos = D.programa.filter(function (x) { return x.tipo === "culto"; }), chev = I.chev.replace("<svg", '<svg class="chev"');
+    function row(k, v) { return v ? '<div class="mus-row"><span>' + k + "</span><b>" + esc(v) + "</b></div>" : ""; }
+    var h = '<div class="pad mus"><h2 class="h">' + LT("Canciones de la convención", "Canções da convenção") + '</h2><div class="rows">' + M.repertorio.map(function (s) {
+      return '<a class="row" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(s.titulo + " " + s.autor) + '" target="_blank" rel="noopener">' + I.music + '<span class="txt">' + esc(s.titulo) + "<small>" + esc(s.autor) + " · " + LT("escuchar", "ouvir") + "</small></span>" + chev + "</a>";
+    }).join("") + "</div>";
+    h += '<h2 class="h">' + LT("Música de cada culto", "Música de cada culto") + "</h2>";
+    M.cultos.forEach(function (c, i) {
+      var cu = cultos[i];
+      h += '<details class="panel mus-culto"' + (i === 0 ? " open" : "") + "><summary><b>" + esc(cu ? cu.titulo : "Culto " + (i + 1)) + "</b><span>" + (cu ? esc(fmt(cu.fecha, { weekday: "short" }) + " " + cu.hora) : "") + "</span></summary>" +
+        row(LT("Vocalistas", "Vocalistas"), c.vocalistas.join(", ")) + row("Piano", c.piano.join(" · ")) + row(LT("Bajo", "Baixo"), c.bajo) + row(LT("Batería", "Bateria"), c.bateria) + row("Congas", c.congas) +
+        row(LT("Participaciones", "Participações"), (c.especiales || []).join(" · ")) +
+        (c.coros && c.coros.length ? '<div class="mus-coros"><small>' + LT("Coros", "Coros") + "</small><ul>" + c.coros.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>" : "") + "</details>";
+    });
+    h += '<h2 class="h">' + LT("Coros de avivamiento", "Coros de avivamento") + '</h2><div class="panel mus-list">' + M.avivamiento.map(function (g) { return "<div><small>" + esc(g.nombre) + "</small><p>" + g.coros.map(esc).join(" · ") + "</p></div>"; }).join("") + "</div>";
+    h += '<h2 class="h">' + LT("Adoración", "Adoração") + '</h2><p class="lede">' + LT("Peticiones y preludios", "Petições e prelúdios") + '</p><div class="panel mus-list"><div><p>' + M.adoracion.map(esc).join(" · ") + "</p></div></div>";
+    return h + "</div>";
   }
 
   /* ----- Mapa ----- */
@@ -691,7 +757,8 @@
       var today = isoDay(NOW());
       S.day = days.indexOf(today) >= 0 ? today : (today < D.evento.inicio ? D.evento.inicio : days[0]);
     }
-    var h = '<div class="days" role="tablist">' + days.map(function (d) {
+    if (S.progView === "musica") return progSeg() + musicaHTML();
+    var h = progSeg() + '<div class="days" role="tablist">' + days.map(function (d) {
       var conv = d >= D.evento.inicio && d <= D.evento.fin;
       return '<button role="tab" aria-selected="' + (d === S.day) + '" class="day' + (d === S.day ? " on" : "") + (conv ? " conv" : "") + '" data-a="day" data-v="' + d + '"><small>' + esc(fmt(d, { weekday: "short" })) + "</small><b>" + dateObj(d).getDate() + "</b></button>";
     }).join("") + "</div>";
@@ -855,6 +922,10 @@
         '<div class="bot-acts">' + btn("sos", "", I.phone + LT("Llamar al 911", "Ligar 911"), "danger") + btn("seeMap", "maciel", I.pin + T("seeMap")) + "</div>" +
         LT("También avisale a tu encargado:", "Avise também o seu responsável:") + encargadoBtns();
     }
+    // Oración y consejería (WhatsApp privado)
+    if (has(/oracion|\borar\b|oren por|consejer|aconselh|oracao|angustia|estoy triste|necesito hablar/)) return LT("Si necesitás oración o hablar con alguien, podés escribirle en privado a un pastor por WhatsApp. Nadie más ve la conversación.", "Se precisar de oração ou falar com alguém, pode escrever em particular para um pastor pelo WhatsApp. Ninguém mais vê a conversa.") + '<div class="bot-acts">' + btn("waCons", "", I.wa + LT("Oración y consejería", "Oração e aconselhamento"), "wa") + "</div>";
+    // Música
+    if (has(/musica|\bcoro|canto|cancion|alabanza|himno|vocalista|cantar|cancao|repertorio/)) return LT("Está toda la música de la convención: las canciones, quién toca en cada culto, los coros de avivamiento y la adoración.", "Está toda a música da convenção: as canções, quem toca em cada culto, os coros de avivamento e a adoração.") + '<div class="bot-acts">' + btn("pviewGo", "musica", I.music + LT("Ver la música", "Ver a música")) + "</div>";
     // 2. Hablar con alguien
     if (has(/encargad|responsab|contact|hablar con|whatsapp|llamar|telefono|numero|ligar|falar|alguien|pessoa|persona/)) {
       var e = encargado();
@@ -953,8 +1024,8 @@
     return LT("No estoy seguro de haber entendido. Probá con una de estas preguntas, o escribile directamente a tu encargado:", "Não tenho certeza se entendi. Tente uma destas perguntas ou escreva direto para o seu responsável:") + encargadoBtns();
   }
   var QUICK = {
-    es: ["¿Qué sigue ahora?", "¿A qué hora son los cultos?", "¿Dónde comemos?", "¿Cuándo salen las vans?", "Mi habitación", "Mi llegada", "Lugares para conocer", "Cambio de dinero", "Emergencia"],
-    pt: ["O que vem agora?", "Que horas são os cultos?", "Onde vamos comer?", "Quando saem as vans?", "Meu quarto", "Minha chegada", "Lugares para conhecer", "Câmbio de dinheiro", "Emergência"]
+    es: ["¿Qué sigue ahora?", "¿A qué hora son los cultos?", "¿Dónde comemos?", "¿Cuándo salen las vans?", "Mi habitación", "Mi llegada", "Música", "Necesito oración", "Lugares para conocer", "Cambio de dinero", "Emergencia"],
+    pt: ["O que vem agora?", "Que horas são os cultos?", "Onde vamos comer?", "Quando saem as vans?", "Meu quarto", "Minha chegada", "Música", "Preciso de oração", "Lugares para conhecer", "Câmbio de dinheiro", "Emergência"]
   };
   function chatGreeting() {
     var p = person(), e = encargado();
@@ -1010,7 +1081,7 @@
   }
 
   /* Prueba (solo versión de ejemplo): simular horas de la convención */
-  var SIM = [null, "2026-12-04T09:30", "2026-12-05T17:10", "2026-12-06T12:03", "2026-12-06T12:50", "2026-12-06T18:30"];
+  var SIM = [null, "2026-11-28T09:00", "2026-12-04T09:30", "2026-12-05T17:10", "2026-12-06T12:03", "2026-12-06T12:50", "2026-12-06T18:30"];
   function simLabel() { return S.fakeNow ? fmt(isoDay(new Date(S.fakeNow)), { weekday: "short", day: "numeric" }) + " " + hhmm(new Date(S.fakeNow)) : LT("Hora real", "Hora real"); }
 
   /* ================= Paseo guiado automático (se mueve solo, como un video) ================= */
@@ -1018,21 +1089,13 @@
   function tourSteps() {
     var p = person();
     return [
-      { title: LT("¡Bienvenido al portal!", "Bem-vindo ao portal!"), text: LT("Te mostramos cómo funciona en medio minuto. No hace falta tocar nada.", "Mostramos como funciona em meio minuto. Não precisa tocar em nada."), dur: 3600 },
-      { tab: "inicio", sel: '.nav button[data-v="inicio"]', title: T("tInicio"), text: LT("Tu resumen del día: dónde dormís, tu llegada y lo que sigue.", "Seu resumo do dia: onde vai dormir, sua chegada e o que vem a seguir.") },
-      { tab: "inicio", scroll: ".stay", sel: ".stay", up: ".panel", title: T("myStay"), text: LT("Tu hotel, tu habitación y con quién compartís. Con un toque, cómo llegar.", "Seu hotel, seu quarto e com quem divide. Com um toque, como chegar.") },
-      { tab: "inicio", scroll: ".arrive-photo, .arrive", sel: ".arrive", up: ".panel", title: T("arrival"), text: LT("Cuándo llegás, quién te recibe y tu chofer, con WhatsApp directo.", "Quando você chega, quem te recebe e seu motorista, com WhatsApp direto.") },
-      { tab: "inicio", scroll: ".pcard", sel: ".pcard", up: ".hscroll", title: T("toVisit"), text: LT("Lugares para conocer cerca del hotel. Deslizá para ver más.", "Lugares para conhecer perto do hotel. Deslize para ver mais.") },
-      { tab: "inicio", scroll: "", sel: '.nav button[data-v="mapa"]', title: T("tMapa"), text: LT("El mapa de Montevideo con todo lo importante.", "O mapa de Montevidéu com tudo o que importa.") },
-      { tab: "mapa", sel: ".chips", title: T("tMapa"), text: LT("Elegí qué ver: la convención, las iglesias donde comemos, llegadas, turismo y más.", "Escolha o que ver: a convenção, as igrejas onde comemos, chegadas, turismo e mais.") },
-      { tab: "mapa", sel: "#sheet .handle", up: "#sheet", title: LT("Cada lugar", "Cada lugar"), text: LT("Tocá un lugar para ver su foto, la distancia y «Cómo llegar».", "Toque em um lugar para ver a foto, a distância e «Como chegar».") },
-      { tab: "mapa", sel: '.nav button[data-v="programa"]', title: T("tPrograma"), text: LT("Todo el cronograma, día por día.", "Toda a programação, dia a dia.") },
-      { tab: "programa", sel: ".item.culto", title: LT("Cultos, comidas y vans", "Cultos, refeições e vans"), text: LT("Los horarios de cada culto, las comidas y cuándo salen las vans.", "Os horários de cada culto, as refeições e quando saem as vans.") },
-      { tab: "programa", sel: '.nav button[data-v="contactos"]', title: T("tContactos"), text: LT("Tu equipo de apoyo, siempre a mano.", "Sua equipe de apoio, sempre à mão.") },
-      { tab: "contactos", sel: ".team-list .person", title: T("yourTeam"), text: LT("Escribiles por WhatsApp o llamalos con un toque.", "Escreva pelo WhatsApp ou ligue com um toque.") },
-      { tab: "contactos", sel: ".chat-fab", title: LT("¿Dudas?", "Dúvidas?"), text: LT("El asistente responde al instante. También podés escribirle a tu encargado.", "O assistente responde na hora. Você também pode escrever para o seu responsável.") },
-      { tab: "contactos", sel: '.nav button[data-v="perfil"]', title: T("tPerfil"), text: LT("Tus datos, el idioma y guardar el portal para usarlo sin internet.", "Seus dados, o idioma e salvar o portal para usar sem internet.") },
-      { tab: "inicio", title: LT("¡Listo, " + firstName(p.nombre) + "!", "Pronto, " + firstName(p.nombre) + "!"), text: LT("Dios te bendiga. Te esperamos en la convención.", "Deus te abençoe. Esperamos você na convenção."), dur: 3200 }
+      { title: LT("¡Bienvenido al portal!", "Bem-vindo ao portal!"), text: LT("Un recorrido rápido, sin tocar nada.", "Um tour rápido, sem tocar em nada."), dur: 2400 },
+      { tab: "inicio", scroll: ".stay", sel: ".stay", up: ".panel", title: T("tInicio"), text: LT("Tu estadía, tu llegada y lo que sigue.", "Sua estadia, sua chegada e o que vem a seguir.") },
+      { tab: "inicio", sel: '.nav button[data-v="mapa"]', title: T("tMapa"), text: LT("Montevideo con todo lo importante y «Cómo llegar».", "Montevidéu com tudo o que importa e «Como chegar».") },
+      { tab: "inicio", sel: '.nav button[data-v="programa"]', title: T("tPrograma"), text: LT("Los cultos, las comidas, las vans y la música.", "Os cultos, as refeições, as vans e a música.") },
+      { tab: "inicio", sel: '.nav button[data-v="contactos"]', title: T("tContactos"), text: LT("Tu equipo por WhatsApp, con un toque.", "Sua equipe pelo WhatsApp, com um toque.") },
+      { tab: "inicio", sel: ".chat-fab", title: LT("¿Dudas?", "Dúvidas?"), text: LT("Preguntale al asistente cuando quieras.", "Pergunte ao assistente quando quiser.") },
+      { tab: "inicio", title: LT("¡Listo, " + firstName(p.nombre) + "!", "Pronto, " + firstName(p.nombre) + "!"), text: LT("Dios te bendiga. Te esperamos.", "Deus te abençoe. Esperamos você."), dur: 2200 }
     ];
   }
   function startTour() {
@@ -1077,7 +1140,7 @@
       var target = st.sel ? document.querySelector(st.sel) : null;
       if (target && st.up) target = target.closest(st.up) || target;
       placeTour(target, st);
-      later(nextTourStep, st.dur || 3700);
+      later(nextTourStep, st.dur || 2900);
     }, delay);
   }
   function holePath(W, H, x, y, w, h, r) {
@@ -1297,15 +1360,15 @@
   /* ----- Guardar para usar sin internet ----- */
   /* El mapa de OpenStreetMap no permite descargar zonas enteras por adelantado:
      el portal guarda automáticamente las partes del mapa que la persona ya miró (sw.js). */
-  var SHELL = ["./", "index.html", "styles.css", "fonts.css", "app.js", "data.js", "notif.js", "manifest.webmanifest", "vendor/leaflet/leaflet.js", "vendor/leaflet/leaflet.css",
+  var SHELL = ["./", "index.html", "styles.css", "fonts.css", "app.js", "data.js", "musica.js", "preparacion.js", "notif.js", "manifest.webmanifest", "vendor/leaflet/leaflet.js", "vendor/leaflet/leaflet.css",
     "icons/icon-192.png", "icons/icon-512.png", "fonts/oswald-300_600.woff2", "fonts/poppins-400.woff2", "fonts/poppins-500.woff2", "fonts/poppins-600.woff2", "fonts/poppins-700.woff2",
-    "img/aeropuerto.jpg", "img/aplauso.jpg", "img/artigas.jpg", "img/buquebus.jpg", "img/cerro.jpg", "img/culto1.jpg", "img/culto2.jpg", "img/culto4.jpg", "img/curva-grupo.jpg", "img/curva.jpg", "img/familia.jpg", "img/hotel.jpg", "img/jovenes.jpg", "img/logo.png", "img/montevideo.jpg", "img/musica.jpg", "img/ofrenda.jpg", "img/oracion2.jpg", "img/predica.jpg", "img/salon.jpg", "img/teatro.jpg", "img/lugares/18julio.jpg", "img/lugares/atlantida.jpg", "img/lugares/casapueblo.jpg", "img/lugares/centenario.jpg", "img/lugares/cerro.jpg", "img/lugares/ciudadvieja.jpg", "img/lugares/colonia.jpg", "img/lugares/legislativo.jpg", "img/lugares/matriz.jpg", "img/lugares/mercado.jpg", "img/lugares/mirador.jpg", "img/lugares/piriapolis.jpg", "img/lugares/pocitos.jpg", "img/lugares/punta.jpg", "img/lugares/rambla.jpg", "img/lugares/rodo.jpg", "img/lugares/s_puntacarretas.jpg", "img/lugares/trescruces.jpg"];
+    "img/aeropuerto.jpg", "img/aplauso.jpg", "img/artigas.jpg", "img/buquebus.jpg", "img/cerro.jpg", "img/culto1.jpg", "img/culto2.jpg", "img/culto4.jpg", "img/curva-grupo.jpg", "img/curva.jpg", "img/familia.jpg", "img/hotel.jpg", "img/jovenes.jpg", "img/logo.png", "img/montevideo.jpg", "img/musica.jpg", "img/ofrenda.jpg", "img/oracion2.jpg", "img/predica.jpg", "img/salon.jpg", "img/teatro.jpg", "img/lugares/18julio.jpg", "img/lugares/atlantida.jpg", "img/lugares/casapueblo.jpg", "img/lugares/centenario.jpg", "img/lugares/cerro.jpg", "img/lugares/ciudadvieja.jpg", "img/lugares/colonia.jpg", "img/lugares/legislativo.jpg", "img/lugares/matriz.jpg", "img/lugares/mercado.jpg", "img/lugares/mirador.jpg", "img/lugares/piriapolis.jpg", "img/lugares/pocitos.jpg", "img/lugares/punta.jpg", "img/lugares/rambla.jpg", "img/lugares/rodo.jpg", "img/lugares/solis.jpg", "img/lugares/s_puntacarretas.jpg", "img/lugares/trescruces.jpg"];
   function saveOffline() {
     if (S.dl) return;
     if (!("caches" in window)) return toast("Este navegador no permite guardar sin internet.");
     if (!navigator.onLine) return toast(T("offline"));
     S.dl = { done: 0, total: SHELL.length }; refreshOff();
-    caches.open("conv-shell-v5").then(function (shellC) {
+    caches.open("conv-shell-v6").then(function (shellC) {
       function step() { S.dl.done++; refreshOff(); }
       return Promise.all(SHELL.map(function (u) { return fetch(u, { cache: "reload" }).then(function (r) { if (r.ok) return shellC.put(u, r); }).catch(function () {}).then(step); }));
     }).then(function () {
@@ -1382,6 +1445,10 @@
       case "tour": startTour(); break;
       case "offline": saveOffline(); break;
       case "install": doInstall(); break;
+      case "share": shareInvite(); break;
+      case "pviewGo": closeModal(); S.prevTab = S.tab; S.tab = "programa"; S.progView = v; render(); break;
+      case "waCons": openCons(); break;
+      case "pview": S.progView = v; var c1 = document.getElementById("content"); render(); var c2 = document.getElementById("content"); if (c2) c2.scrollTop = 0; break;
       case "logout":
         modal("<h3>" + LT("¿Cerrar sesión?", "Sair?") + "</h3><p>" + LT("El portal va a empezar de nuevo, como la primera vez: vas a elegir tu bandera, tu nombre y poner tu PIN.", "O portal vai recomeçar como na primeira vez: você vai escolher sua bandeira, seu nome e digitar seu PIN.") + "</p>" +
           '<div class="btn-row"><button class="btn btn-primary press" data-a="logoutYes">' + I.out + LT("Cerrar sesión", "Sair") + "</button></div>");

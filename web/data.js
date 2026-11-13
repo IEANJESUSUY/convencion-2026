@@ -32,7 +32,9 @@ window.DATA = {
     anterior: "Convención 2025 · «Llamados para servir»",
     emergencias: "911",
     // Al terminar la convención, el portal invita a mandar fotos y testimonios a este WhatsApp
-    comunicaciones: { nombre: "Comunicaciones IEANJESÚS Uruguay", whatsapp: "+598 99 000 012" }
+    comunicaciones: { nombre: "Comunicaciones IEANJESÚS Uruguay", whatsapp: "+598 99 000 012" },
+    // Oración y consejería: abre WhatsApp en privado con un pastor (número de ejemplo)
+    consejeria: { nombre: "Oración y consejería", whatsapp: "+598 99 000 013" }
   },
 
   /* Foto que ve cada persona en "Tu llegada", según cómo llega. */
@@ -174,17 +176,17 @@ window.DATA = {
     { id: "puerto", cat: "llegada", nombre: "Puerto · Terminal Buquebus", desc: "Barcos desde y hacia Buenos Aires.", lat: -34.9040, lng: -56.2095, t: "5 min en auto", foto: "img/buquebus.jpg" },
     { id: "trescruces", cat: "llegada", nombre: "Terminal Tres Cruces", desc: "Ómnibus nacionales e internacionales. Tiene shopping.", lat: -34.8938, lng: -56.1665, t: "10 min en auto", foto: "img/lugares/trescruces.jpg", cred: "NaBUru38 · CC BY-SA 4.0" },
 
-    { id: "plaza", cat: "turismo", nombre: "Plaza Independencia", desc: "La plaza principal, con el monumento y el Mausoleo de Artigas y el Palacio Salvo.", lat: -34.9066, lng: -56.2001, t: "5 min a pie", foto: "img/montevideo.jpg" },
-    { id: "solis", cat: "turismo", nombre: "Teatro Solís", desc: "Teatro histórico de 1856, con visitas guiadas.", lat: -34.9073, lng: -56.2009, t: "6 min a pie" },
-    { id: "ciudadvieja", cat: "turismo", nombre: "Ciudad Vieja · Peatonal Sarandí", desc: "Calle peatonal con artesanías, cafés y arquitectura colonial.", lat: -34.9068, lng: -56.2035, t: "10 min a pie", foto: "img/lugares/ciudadvieja.jpg", cred: "Santiago Mazzarovich · CC BY-SA 4.0" },
+    { id: "plaza", cat: "turismo", imperdible: true, nombre: "Plaza Independencia", desc: "La plaza principal, con el monumento y el Mausoleo de Artigas y el Palacio Salvo.", lat: -34.9066, lng: -56.2001, t: "5 min a pie", foto: "img/montevideo.jpg" },
+    { id: "solis", cat: "turismo", imperdible: true, nombre: "Teatro Solís", desc: "El teatro más importante del Uruguay, de 1856. Tiene visitas guiadas por dentro: vale la pena.", lat: -34.9073, lng: -56.2009, t: "6 min a pie", foto: "img/lugares/solis.jpg", cred: "Felipe Restrepo Acosta · CC BY-SA 4.0" },
+    { id: "ciudadvieja", cat: "turismo", imperdible: true, nombre: "Ciudad Vieja · Peatonal Sarandí", desc: "Calle peatonal con artesanías, cafés y arquitectura colonial.", lat: -34.9068, lng: -56.2035, t: "10 min a pie", foto: "img/lugares/ciudadvieja.jpg", cred: "Santiago Mazzarovich · CC BY-SA 4.0" },
     { id: "matriz", cat: "turismo", nombre: "Plaza Matriz y Catedral", desc: "El corazón de la Ciudad Vieja.", lat: -34.9067, lng: -56.2048, t: "12 min a pie", foto: "img/lugares/matriz.jpg", cred: "Derys Benitez · CC BY-SA 3.0" },
-    { id: "mercado", cat: "turismo", nombre: "Mercado del Puerto", desc: "Parrillas tradicionales uruguayas. Ideal para almorzar.", lat: -34.9064, lng: -56.2122, t: "20 min a pie", foto: "img/lugares/mercado.jpg", cred: "Ypsilon from Finland · CC0" },
-    { id: "rambla", cat: "turismo", nombre: "Rambla de Montevideo", desc: "La costanera, a dos cuadras: para caminar y ver el atardecer sobre el Río de la Plata.", lat: -34.9110, lng: -56.1975, t: "4 min a pie", foto: "img/lugares/rambla.jpg", cred: "Falk2 · CC BY-SA 3.0 DE" },
+    { id: "mercado", cat: "turismo", imperdible: true, nombre: "Mercado del Puerto", desc: "Parrillas tradicionales uruguayas. Ideal para almorzar.", lat: -34.9064, lng: -56.2122, t: "20 min a pie", foto: "img/lugares/mercado.jpg", cred: "Ypsilon from Finland · CC0" },
+    { id: "rambla", cat: "turismo", imperdible: true, nombre: "Rambla de Montevideo", desc: "La costanera, a dos cuadras: para caminar y ver el atardecer sobre el Río de la Plata.", lat: -34.9110, lng: -56.1975, t: "4 min a pie", foto: "img/lugares/rambla.jpg", cred: "Falk2 · CC BY-SA 3.0 DE" },
     { id: "18julio", cat: "turismo", nombre: "Avenida 18 de Julio", desc: "La avenida principal: comercios, casas de cambio y farmacias.", lat: -34.9058, lng: -56.1917, t: "8 min a pie", foto: "img/lugares/18julio.jpg", cred: "NaBUru38 · CC BY-SA 4.0" },
     { id: "mirador", cat: "turismo", nombre: "Mirador de la Intendencia", desc: "Vista de toda la ciudad desde lo alto del Palacio Municipal.", lat: -34.9055, lng: -56.1866, t: "15 min a pie", foto: "img/lugares/mirador.jpg", cred: "Intendencia de Montevideo · CC BY-SA 4.0" },
-    { id: "legislativo", cat: "turismo", nombre: "Palacio Legislativo", desc: "El Parlamento uruguayo, con visitas guiadas.", lat: -34.8913, lng: -56.1872, t: "10 min en auto", foto: "img/lugares/legislativo.jpg", cred: "GameOfLight · CC BY-SA 3.0" },
+    { id: "legislativo", cat: "turismo", imperdible: true, nombre: "Palacio Legislativo", desc: "El Parlamento uruguayo, con visitas guiadas.", lat: -34.8913, lng: -56.1872, t: "10 min en auto", foto: "img/lugares/legislativo.jpg", cred: "GameOfLight · CC BY-SA 3.0" },
     { id: "rodo", cat: "turismo", nombre: "Parque Rodó y Playa Ramírez", desc: "Parque con lago y playa urbana.", lat: -34.9150, lng: -56.1670, t: "10 min en auto", foto: "img/lugares/rodo.jpg", cred: "VaneMD · CC0" },
-    { id: "centenario", cat: "turismo", nombre: "Estadio Centenario", desc: "Estadio del primer Mundial (1930), con museo.", lat: -34.8945, lng: -56.1528, t: "15 min en auto", foto: "img/lugares/centenario.jpg", cred: "Marcelo Campi · CC BY-SA 2.0" },
+    { id: "centenario", cat: "turismo", imperdible: true, nombre: "Estadio Centenario", desc: "Estadio del primer Mundial (1930), con museo.", lat: -34.8945, lng: -56.1528, t: "15 min en auto", foto: "img/lugares/centenario.jpg", cred: "Marcelo Campi · CC BY-SA 2.0" },
     { id: "pocitos", cat: "turismo", nombre: "Playa de Pocitos", desc: "La playa urbana más conocida de Montevideo.", lat: -34.9135, lng: -56.1440, t: "15 min en auto", foto: "img/lugares/pocitos.jpg", cred: "Elemaki · CC BY 3.0" },
     { id: "cerro", cat: "turismo", nombre: "Fortaleza del Cerro", desc: "Fortaleza histórica y mirador de la bahía.", lat: -34.8888, lng: -56.2603, t: "25 min en auto", foto: "img/lugares/cerro.jpg", cred: "Juan Garré · CC BY-SA 3.0" },
 

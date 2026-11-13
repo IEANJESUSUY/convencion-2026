@@ -1,0 +1,35 @@
+/* «Preparándonos»: los 10 días antes de la convención.
+   Cada día: un versículo, una reflexión corta y un motivo de oración. Aparece en Inicio y llega como aviso.
+   Lo usan las dos versiones del portal y los avisos (notif.js). Textos de ejemplo para revisar. */
+window.PREPARACION = [
+  { falta: 10, cita: "2 Corintios 3:18",
+    es: { v: "Nosotros todos, mirando a cara descubierta como en un espejo la gloria del Señor, somos transformados de gloria en gloria en la misma imagen.", t: "Faltan diez días. Este es nuestro lema: Dios no quiere solo que vengamos, quiere transformarnos.", o: "Oremos para que cada culto nos acerque más a la imagen de Cristo." },
+    pt: { v: "Todos nós, com cara descoberta, refletindo como um espelho a glória do Senhor, somos transformados de glória em glória na mesma imagem.", t: "Faltam dez dias. Este é o nosso lema: Deus não quer só que venhamos, quer nos transformar.", o: "Oremos para que cada culto nos aproxime mais da imagem de Cristo." } },
+  { falta: 9, cita: "Romanos 12:2",
+    es: { v: "No os conforméis a este siglo, sino transformaos por medio de la renovación de vuestro entendimiento.", t: "La transformación empieza por dentro. Preparemos el corazón, no solo la valija.", o: "Oremos por un corazón dispuesto a ser renovado." },
+    pt: { v: "Não sede conformados com este mundo, mas sede transformados pela renovação do vosso entendimento.", t: "A transformação começa por dentro. Preparemos o coração, não só a mala.", o: "Oremos por um coração disposto a ser renovado." } },
+  { falta: 8, cita: "Salmo 133:1",
+    es: { v: "¡Mirad cuán bueno y cuán delicioso es habitar los hermanos juntos en armonía!", t: "Vienen hermanos de todo el Uruguay y de otros países. Qué alegría vernos otra vez.", o: "Oremos por la unidad de todas las iglesias." },
+    pt: { v: "Oh! quão bom e quão suave é que os irmãos vivam em união!", t: "Vêm irmãos de todo o Uruguai e de outros países. Que alegria nos vermos de novo.", o: "Oremos pela unidade de todas as igrejas." } },
+  { falta: 7, cita: "Salmo 122:1",
+    es: { v: "Yo me alegré con los que me decían: A la casa de Jehová iremos.", t: "Una semana. ¿Hay alguien a quien te gustaría llevar a la casa de Dios? Esta puede ser su oportunidad.", o: "Oremos por las personas que vamos a invitar.", invitar: true },
+    pt: { v: "Alegrei-me quando me disseram: Vamos à casa do Senhor.", t: "Uma semana. Há alguém que você gostaria de levar à casa de Deus? Esta pode ser a oportunidade.", o: "Oremos pelas pessoas que vamos convidar.", invitar: true } },
+  { falta: 6, cita: "Hechos 2:1",
+    es: { v: "Cuando llegó el día de Pentecostés, estaban todos unánimes juntos.", t: "El Espíritu Santo se derramó sobre una iglesia unida y que esperaba.", o: "Oremos por un derramamiento del Espíritu Santo en la convención." },
+    pt: { v: "Cumprindo-se o dia de Pentecostes, estavam todos concordemente no mesmo lugar.", t: "O Espírito Santo foi derramado sobre uma igreja unida e que esperava.", o: "Oremos por um derramamento do Espírito Santo na convenção." } },
+  { falta: 5, cita: "Mateo 18:20",
+    es: { v: "Donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos.", t: "Seremos cientos reunidos en su Nombre. Él prometió estar ahí.", o: "Oremos por los pastores y los que van a predicar." },
+    pt: { v: "Onde estiverem dois ou três reunidos em meu nome, aí estou eu no meio deles.", t: "Seremos centenas reunidos em seu Nome. Ele prometeu estar ali.", o: "Oremos pelos pastores e pelos que vão pregar." } },
+  { falta: 4, cita: "Filipenses 1:6",
+    es: { v: "El que comenzó en vosotros la buena obra, la perfeccionará hasta el día de Jesucristo.", t: "Lo que Dios empezó en tu vida, lo va a terminar. Llegá con fe.", o: "Oremos por los músicos, el coro y cada comisión que trabaja." },
+    pt: { v: "Aquele que em vós começou a boa obra a aperfeiçoará até ao dia de Jesus Cristo.", t: "O que Deus começou na sua vida, Ele vai terminar. Chegue com fé.", o: "Oremos pelos músicos, pelo coral e por cada comissão que trabalha." } },
+  { falta: 3, cita: "Gálatas 2:20",
+    es: { v: "Ya no vivo yo, mas vive Cristo en mí.", t: "Ser transformados a su imagen es dejar que Cristo se vea en nosotros.", o: "Oremos por los que viajan: que lleguen bien y con bien." },
+    pt: { v: "Já não sou eu quem vive, mas Cristo vive em mim.", t: "Ser transformados à sua imagem é deixar que Cristo se veja em nós.", o: "Oremos pelos que viajam: que cheguem bem." } },
+  { falta: 2, cita: "Isaías 40:31",
+    es: { v: "Los que esperan a Jehová tendrán nuevas fuerzas.", t: "Último tramo de preparativos. Descansá en Él: lo mejor está por venir.", o: "Oremos por las familias que nos reciben y los que sirven." },
+    pt: { v: "Os que esperam no Senhor renovarão as forças.", t: "Última etapa dos preparativos. Descanse nEle: o melhor está por vir.", o: "Oremos pelas famílias que nos recebem e pelos que servem." } },
+  { falta: 1, cita: "Salmo 27:4",
+    es: { v: "Una cosa he demandado a Jehová, ésta buscaré: que esté yo en la casa de Jehová todos los días de mi vida.", t: "¡Mañana empieza! ¿Ya preparaste todo? Si podés, mandanos una foto de los preparativos.", o: "Oremos para llegar con hambre de Dios." },
+    pt: { v: "Uma coisa pedi ao Senhor, e a buscarei: que possa morar na casa do Senhor todos os dias da minha vida.", t: "Amanhã começa! Já preparou tudo? Se puder, mande uma foto dos preparativos.", o: "Oremos para chegar com fome de Deus." } }
+];

@@ -40,8 +40,14 @@
     var first0 = cultos[0] || items[0];
     if (first0) {
       var st = start(first0);
-      [30, 14, 7, 3, 2, 1].forEach(function (n) {
+      var prep = {};
+      (g.PREPARACION || []).forEach(function (p0) { prep[p0.falta] = p0; });
+      [30, 14, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].forEach(function (n) {
         var d = new Date(st); d.setDate(d.getDate() - n); d.setHours(9, 0, 0, 0);
+        var pr = prep[n];
+        // «Preparándonos»: los últimos 10 días, el versículo del día
+        if (pr) { var tx = pr[pt ? "pt" : "es"] || pr.es; add("cd" + n, d, 14 * H, n === 1 ? L("¡Mañana empieza la convención!", "Amanhã começa a convenção!") : L("Faltan " + n + " días · Preparándonos", "Faltam " + n + " dias · Preparando-nos"), "«" + tx.v + "» " + pr.cita, "inicio"); return; }
+        if (n < 14 && n !== 7 && n !== 3 && n !== 2 && n !== 1) return;
         if (n === 1) add("cd1", d, 14 * H, L("¡Mañana empieza la convención!", "Amanhã começa a convenção!"),
           L("Mañana a las " + first0.hora + " nos encontramos en el Teatro Cervantes. Tocá para ver el programa.", "Amanhã às " + first0.hora + " nos encontramos no Teatro Cervantes. Toque para ver a programação."), "programa");
         else add("cd" + n, d, 14 * H, L("Faltan " + n + " días para la convención", "Faltam " + n + " dias para a convenção"),

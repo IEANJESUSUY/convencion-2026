@@ -27,7 +27,8 @@ window.DATA = {
     anterior: "Convención 2025 · «Llamados para servir»",
     emergencias: "911",
     fotosAntes: true, // el día antes, el portal pide fotos de los preparativos
-    comunicaciones: { nombre: "Comunicaciones IEANJESÚS Uruguay", whatsapp: "+598 99 000 100" }
+    comunicaciones: { nombre: "Comunicaciones IEANJESÚS Uruguay", whatsapp: "+598 99 000 100" },
+    consejeria: { nombre: "Oración y consejería", whatsapp: "+598 99 000 102" }
   },
 
   galeria: [
@@ -93,7 +94,7 @@ window.DATA = {
       facebook: "https://www.facebook.com/profile.php?id=100016911125717",
       foto: "img/iglesias/salto.jpg", fotoPos: "50% 88%" },
     { id: "curva", nombre: "Curva de Maroñas", saludo: "Hermanos de Curva de Maroñas", depto: "Montevideo",
-      pastor: "Pr. Jorge Ceballos", pastorTel: "+598 99 000 181", encargado: "Hno. Gustavo Ferreira", encargadoTel: "+598 99 000 182",
+      pastor: "Pr. Jorge Cevallos", pastorTel: "+598 99 000 181", encargado: "Hno. Gustavo Ferreira", encargadoTel: "+598 99 000 182",
       direccion: "Roma 5064, entre Av. Belloni y Camino Maldonado, Montevideo", lat: -34.854865, lng: -56.133439, exacta: true,
       facebook: "https://www.facebook.com/profile.php?id=100064568956981",
       foto: "img/iglesias/curva.jpg", fotoPos: "50% 55%" },
@@ -111,16 +112,28 @@ window.DATA = {
 
   /* Comisiones nacionales (solo nombres, sin cargos) */
   comisiones: [
-    { id: "junta", nombre: "Junta Nacional", miembros: ["Pr. Franklin Salas", "Pr. Santiago Pérez", "Pr. Abel González"] },
-    { id: "misiones", nombre: "Misiones", miembros: ["Pr. Héctor Rúa", "Pr. William Jiménez", "Pr. Antonio Farro"] },
-    { id: "jovenes", nombre: "Jóvenes", miembros: ["Pr. Jorge Ceballos"] },
-    { id: "dorcas", nombre: "Damas Dorcas", miembros: ["Hna. Nancy Cornejo", "Hna. Elizabeth Rúa", "Hna. Erika de González", "Hna. Erika Montiel"] },
-    { id: "musica", nombre: "Música", miembros: ["Hna. Abigail Oña"] },
-    { id: "escuela", nombre: "Escuela Dominical", miembros: ["Hna. Sabrina Ojeda", "Hna. Ana Rendón", "Hna. Mercedes Tobar"] },
-    { id: "comunicaciones", nombre: "Comunicaciones", miembros: ["Pr. Santiago Pérez"] }
-  ],
-
-  /* Solo los cultos (comision = quién lo dirige) */
+    { id: "protocolo", nombre: "Protocolo", miembros: ["Pr. Santiago Pérez", "Pr. Héctor Rúa"] },
+    { id: "finanzas", nombre: "Finanzas", miembros: ["Pr. Abel González", "Pr. Santiago Pérez"] },
+    { id: "intercesion", nombre: "Intercesión y ministración", miembros: ["Pr. Antonio Farro", "Pr. Josué Rivera"] },
+    { id: "alimentacion", nombre: "Alimentación", miembros: ["IEANJESÚS El Cerro", "IEANJESÚS Curva de Maroñas"] },
+    { id: "recepcion", nombre: "Recepción", miembros: ["Hna. Mercedes Tobar", "Hna. Michel Preciado"] },
+    { id: "vigilancia", nombre: "Vigilancia", miembros: ["Pr. Josué Rivera", "Hna. Sabrina Ojeda", "Hna. Ana de Farro"] },
+    { id: "comunicaciones", nombre: "Comunicaciones", miembros: ["Hno. Santiago Salas", "Hna. Priscila Salas"] },
+    { id: "traslado", nombre: "Traslado de delegaciones", miembros: ["Pr. William Jiménez"] },
+    { id: "sonido", nombre: "Sonido", miembros: ["IEANJESÚS Maldonado"] },
+    { id: "musica", nombre: "Música", miembros: ["Hna. Abigail Oña", "Hna. Priscila Salas"] },
+    { id: "ornato", nombre: "Ornato", miembros: ["Hna. Nancy Cornejo", "Hna. Erika Montiel"] },
+    { id: "cafeteria", nombre: "Cafetería", miembros: ["Hna. Elizabeth Rúa"] },
+    { id: "hospedaje", nombre: "Hospedaje", miembros: ["Pr. Jorge Cevallos"] },
+    { id: "mantenimiento", nombre: "Mantenimiento", miembros: ["Sábado: IEANJESÚS Melo", "Domingo: IEANJESÚS Maldonado"] },
+    { id: "logistica", nombre: "Logística", miembros: ["IEANJESÚS Maldonado"] },
+    // los que dirigen cada culto (para el programa)
+    { id: "junta", nombre: "Administración Nacional", oculta: true, miembros: [] },
+    { id: "jovenes", nombre: "Jóvenes", oculta: true, miembros: [] },
+    { id: "escuela", nombre: "Escuela Dominical", oculta: true, miembros: [] },
+    { id: "dorcas", nombre: "Damas Dorcas", oculta: true, miembros: [] },
+    { id: "misiones", nombre: "Misiones", oculta: true, miembros: [] }
+  ],  /* Solo los cultos (comision = quién lo dirige) */
   programa: [
     { fecha: "2026-12-05", hora: "16:00", tipo: "culto", titulo: "Culto de apertura", equipo: "Administración Nacional", comision: "junta", nota: "Acto de inauguración: Congregación de Melo", lugar: "teatro", destacado: true },
     { fecha: "2026-12-05", hora: "19:00", tipo: "culto", titulo: "Segundo culto", equipo: "Comité Nacional de Jóvenes", comision: "jovenes", lugar: "teatro" },
@@ -144,12 +157,15 @@ window.DATA = {
     { id: "c_mercado", cat: "comida", nombre: "Mercado del Puerto", desc: "Parrillas tradicionales uruguayas.", lat: -34.9064, lng: -56.2122, t: "20 min a pie", foto: "../img/lugares/mercado.jpg", cred: "Ypsilon from Finland · CC0" },
     { id: "c_trescruces", cat: "comida", nombre: "Patio de comidas Tres Cruces", desc: "Muchas opciones juntas, ideal si venís en ómnibus del interior.", lat: -34.8941, lng: -56.1660, t: "10 min en auto" },
 
-    { id: "plaza", cat: "turismo", nombre: "Plaza Independencia", desc: "La plaza principal, con el monumento y el Mausoleo de Artigas y el Palacio Salvo.", lat: -34.9066, lng: -56.2001, t: "5 min a pie", foto: "../img/montevideo.jpg" },
-    { id: "ciudadvieja", cat: "turismo", nombre: "Ciudad Vieja", desc: "Calle peatonal con artesanías, cafés y arquitectura colonial.", lat: -34.9068, lng: -56.2035, t: "10 min a pie", foto: "../img/lugares/ciudadvieja.jpg", cred: "Santiago Mazzarovich · CC BY-SA 4.0" },
+    { id: "plaza", cat: "turismo", imperdible: true, nombre: "Plaza Independencia", desc: "La plaza principal, con el monumento y el Mausoleo de Artigas y el Palacio Salvo.", lat: -34.9066, lng: -56.2001, t: "5 min a pie", foto: "../img/montevideo.jpg" },
+    { id: "solis", cat: "turismo", imperdible: true, nombre: "Teatro Solís", desc: "El teatro más importante del Uruguay, de 1856. Tiene visitas guiadas por dentro: vale la pena.", lat: -34.9073, lng: -56.2009, t: "6 min a pie", foto: "../img/lugares/solis.jpg", cred: "Felipe Restrepo Acosta · CC BY-SA 4.0" },
+    { id: "mercado", cat: "turismo", imperdible: true, nombre: "Mercado del Puerto", desc: "El mercado de 1868 con las parrillas tradicionales uruguayas.", lat: -34.9064, lng: -56.2122, t: "20 min a pie", foto: "../img/lugares/mercado.jpg", cred: "Ypsilon from Finland · CC0" },
+    { id: "centenario", cat: "turismo", imperdible: true, nombre: "Estadio Centenario", desc: "Estadio del primer Mundial (1930), con el Museo del Fútbol.", lat: -34.8945, lng: -56.1528, t: "15 min en auto", foto: "../img/lugares/centenario.jpg", cred: "Marcelo Campi · CC BY-SA 2.0" },
+    { id: "ciudadvieja", cat: "turismo", imperdible: true, nombre: "Ciudad Vieja", desc: "Calle peatonal con artesanías, cafés y arquitectura colonial.", lat: -34.9068, lng: -56.2035, t: "10 min a pie", foto: "../img/lugares/ciudadvieja.jpg", cred: "Santiago Mazzarovich · CC BY-SA 4.0" },
     { id: "matriz", cat: "turismo", nombre: "Plaza Matriz y Catedral", desc: "El corazón de la Ciudad Vieja.", lat: -34.9067, lng: -56.2048, t: "12 min a pie", foto: "../img/lugares/matriz.jpg", cred: "Derys Benitez · CC BY-SA 3.0" },
-    { id: "rambla", cat: "turismo", nombre: "Rambla de Montevideo", desc: "La costanera, a dos cuadras: para caminar y ver el atardecer.", lat: -34.9110, lng: -56.1975, t: "4 min a pie", foto: "../img/lugares/rambla.jpg", cred: "Falk2 · CC BY-SA 3.0 DE" },
+    { id: "rambla", cat: "turismo", imperdible: true, nombre: "Rambla de Montevideo", desc: "La costanera, a dos cuadras: para caminar y ver el atardecer.", lat: -34.9110, lng: -56.1975, t: "4 min a pie", foto: "../img/lugares/rambla.jpg", cred: "Falk2 · CC BY-SA 3.0 DE" },
     { id: "mirador", cat: "turismo", nombre: "Mirador de la Intendencia", desc: "Vista de toda la ciudad desde lo alto del Palacio Municipal.", lat: -34.9055, lng: -56.1866, t: "15 min a pie", foto: "../img/lugares/mirador.jpg", cred: "Intendencia de Montevideo · CC BY-SA 4.0" },
-    { id: "legislativo", cat: "turismo", nombre: "Palacio Legislativo", desc: "El Parlamento uruguayo, con visitas guiadas.", lat: -34.8913, lng: -56.1872, t: "10 min en auto", foto: "../img/lugares/legislativo.jpg", cred: "GameOfLight · CC BY-SA 3.0" },
+    { id: "legislativo", cat: "turismo", imperdible: true, nombre: "Palacio Legislativo", desc: "El Parlamento uruguayo, con visitas guiadas.", lat: -34.8913, lng: -56.1872, t: "10 min en auto", foto: "../img/lugares/legislativo.jpg", cred: "GameOfLight · CC BY-SA 3.0" },
     { id: "rodo", cat: "turismo", nombre: "Parque Rodó y Playa Ramírez", desc: "Parque con lago y playa urbana.", lat: -34.9150, lng: -56.1670, t: "10 min en auto", foto: "../img/lugares/rodo.jpg", cred: "VaneMD · CC0" },
     { id: "pocitos", cat: "turismo", nombre: "Playa de Pocitos", desc: "La playa urbana más conocida de Montevideo.", lat: -34.9135, lng: -56.1440, t: "15 min en auto", foto: "../img/lugares/pocitos.jpg", cred: "Elemaki · CC BY 3.0" },
 
