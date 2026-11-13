@@ -4,7 +4,7 @@ self.NOTIF_CACHE = "nac-meta";
 self.NOTIF_ICON = "../icons/icon-192.png";
 importScripts("../preparacion.js", "../notif.js");
 
-var SHELL = "nac-shell-v2";
+var SHELL = "nac-shell-v3";
 var TILES = "conv-tiles-v2"; // el mapa se comparte con el portal de delegaciones
 var FILES = ["./", "index.html", "nacional.css", "app.js", "data.js", "manifest.webmanifest",
   "../styles.css", "../fonts.css", "../musica.js", "../preparacion.js", "../notif.js", "../vendor/leaflet/leaflet.js", "../vendor/leaflet/leaflet.css",

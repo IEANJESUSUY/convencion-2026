@@ -110,30 +110,8 @@ window.DATA = {
       foto: "img/iglesias/la-paz.jpg", fotoPos: "50% 78%" }
   ],
 
-  /* Comisiones nacionales (solo nombres, sin cargos) */
-  comisiones: [
-    { id: "protocolo", nombre: "Protocolo", miembros: ["Pr. Santiago Pérez", "Pr. Héctor Rúa"] },
-    { id: "finanzas", nombre: "Finanzas", miembros: ["Pr. Abel González", "Pr. Santiago Pérez"] },
-    { id: "intercesion", nombre: "Intercesión y ministración", miembros: ["Pr. Antonio Farro", "Pr. Josué Rivera"] },
-    { id: "alimentacion", nombre: "Alimentación", miembros: ["IEANJESÚS El Cerro", "IEANJESÚS Curva de Maroñas"] },
-    { id: "recepcion", nombre: "Recepción", miembros: ["Hna. Mercedes Tobar", "Hna. Michel Preciado"] },
-    { id: "vigilancia", nombre: "Vigilancia", miembros: ["Pr. Josué Rivera", "Hna. Sabrina Ojeda", "Hna. Ana de Farro"] },
-    { id: "comunicaciones", nombre: "Comunicaciones", miembros: ["Hno. Santiago Salas", "Hna. Priscila Salas"] },
-    { id: "traslado", nombre: "Traslado de delegaciones", miembros: ["Pr. William Jiménez"] },
-    { id: "sonido", nombre: "Sonido", miembros: ["IEANJESÚS Maldonado"] },
-    { id: "musica", nombre: "Música", miembros: ["Hna. Abigail Oña", "Hna. Priscila Salas"] },
-    { id: "ornato", nombre: "Ornato", miembros: ["Hna. Nancy Cornejo", "Hna. Erika Montiel"] },
-    { id: "cafeteria", nombre: "Cafetería", miembros: ["Hna. Elizabeth Rúa"] },
-    { id: "hospedaje", nombre: "Hospedaje", miembros: ["Pr. Jorge Cevallos"] },
-    { id: "mantenimiento", nombre: "Mantenimiento", miembros: ["Sábado: IEANJESÚS Melo", "Domingo: IEANJESÚS Maldonado"] },
-    { id: "logistica", nombre: "Logística", miembros: ["IEANJESÚS Maldonado"] },
-    // los que dirigen cada culto (para el programa)
-    { id: "junta", nombre: "Administración Nacional", oculta: true, miembros: [] },
-    { id: "jovenes", nombre: "Jóvenes", oculta: true, miembros: [] },
-    { id: "escuela", nombre: "Escuela Dominical", oculta: true, miembros: [] },
-    { id: "dorcas", nombre: "Damas Dorcas", oculta: true, miembros: [] },
-    { id: "misiones", nombre: "Misiones", oculta: true, miembros: [] }
-  ],  /* Solo los cultos (comision = quién lo dirige) */
+  comisiones: [],
+  /* Solo los cultos (comision = quién lo dirige) */
   programa: [
     { fecha: "2026-12-05", hora: "16:00", tipo: "culto", titulo: "Culto de apertura", equipo: "Administración Nacional", comision: "junta", nota: "Acto de inauguración: Congregación de Melo", lugar: "teatro", destacado: true },
     { fecha: "2026-12-05", hora: "19:00", tipo: "culto", titulo: "Segundo culto", equipo: "Comité Nacional de Jóvenes", comision: "jovenes", lugar: "teatro" },
@@ -152,10 +130,10 @@ window.DATA = {
 
     { id: "trescruces", cat: "viaje", nombre: "Terminal Tres Cruces", desc: "Llegan los ómnibus del interior. Desde acá, unos 10 minutos en taxi o en ómnibus por 18 de Julio hasta el teatro.", lat: -34.8938, lng: -56.1665, t: "10 min en auto", foto: "../img/lugares/trescruces.jpg", cred: "NaBUru38 · CC BY-SA 4.0" },
 
-    { id: "c_18julio", cat: "comida", nombre: "Avenida 18 de Julio", desc: "Zona con muchos lugares para comer al paso, a pocas cuadras del teatro. Elegí el que más te guste.", lat: -34.9058, lng: -56.1917, t: "8 min a pie", foto: "../img/lugares/18julio.jpg", cred: "NaBUru38 · CC BY-SA 4.0" },
-    { id: "c_sarandi", cat: "comida", nombre: "Peatonal Sarandí", desc: "Cafés y lugares para comer en la Ciudad Vieja, a pocas cuadras del teatro.", lat: -34.9068, lng: -56.2035, t: "10 min a pie", foto: "../img/lugares/ciudadvieja.jpg", cred: "Santiago Mazzarovich · CC BY-SA 4.0" },
-    { id: "c_mercado", cat: "comida", nombre: "Mercado del Puerto", desc: "Parrillas tradicionales uruguayas.", lat: -34.9064, lng: -56.2122, t: "20 min a pie", foto: "../img/lugares/mercado.jpg", cred: "Ypsilon from Finland · CC0" },
-    { id: "c_trescruces", cat: "comida", nombre: "Patio de comidas Tres Cruces", desc: "Muchas opciones juntas, ideal si venís en ómnibus del interior.", lat: -34.8941, lng: -56.1660, t: "10 min en auto" },
+    { id: "c_18julio", cat: "comida", nombre: "Avenida 18 de Julio", desc: "Sector con muchos lugares para comer al paso: pizzerías, chivitos, cafés y panaderías, a pocas cuadras del teatro.", lat: -34.9058, lng: -56.1917, t: "8 min a pie", foto: "../img/lugares/18julio.jpg", cred: "NaBUru38 · CC BY-SA 4.0" },
+    { id: "c_mam", cat: "comida", nombre: "Mercado Agrícola (MAM)", desc: "Mercado histórico con puestos de comida, frutas y almacenes. Ideal para almorzar en familia.", lat: -34.8889, lng: -56.1839, t: "10 min en auto", foto: "../img/lugares/mam.jpg", cred: "Shirley Olivera · CC BY-SA 3.0" },
+    { id: "c_trescruces", cat: "comida", nombre: "Patio de comidas Tres Cruces", desc: "Muchas opciones juntas en el shopping de la terminal de ómnibus.", lat: -34.8941, lng: -56.1660, t: "10 min en auto", foto: "../img/lugares/trescruces.jpg", cred: "NaBUru38 · CC BY-SA 4.0" },
+    { id: "c_puntacarretas", cat: "comida", nombre: "Patio de comidas Punta Carretas", desc: "Patio de comidas del shopping, cerca de la rambla.", lat: -34.9235, lng: -56.1590, t: "15 min en auto", foto: "../img/lugares/s_puntacarretas.jpg", cred: "Felipe Restrepo Acosta · CC BY-SA 4.0" },
 
     { id: "plaza", cat: "turismo", imperdible: true, nombre: "Plaza Independencia", desc: "La plaza principal, con el monumento y el Mausoleo de Artigas y el Palacio Salvo.", lat: -34.9066, lng: -56.2001, t: "5 min a pie", foto: "../img/montevideo.jpg" },
     { id: "solis", cat: "turismo", imperdible: true, nombre: "Teatro Solís", desc: "El teatro más importante del Uruguay, de 1856. Tiene visitas guiadas por dentro: vale la pena.", lat: -34.9073, lng: -56.2009, t: "6 min a pie", foto: "../img/lugares/solis.jpg", cred: "Felipe Restrepo Acosta · CC BY-SA 4.0" },

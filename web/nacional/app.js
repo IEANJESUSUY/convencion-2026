@@ -471,19 +471,12 @@
       '<div class="actions"><button class="act press" data-a="seeMap" data-v="teatro">' + I.pin + T("seeMap") + '</button><button class="act dark press" data-a="dir" data-v="teatro">' + I.nav + T("directions") + "</button></div></div>");
     h += "</div>";
 
-    // Otras iglesias que vienen
-    h += blk('<div class="pad"><h2 class="h">Nuestras iglesias</h2><p class="lede">Las iglesias de todo el país que se encuentran en la convención.</p></div>' +
-      '<div class="hscroll">' + D.iglesias.map(function (c) {
-        return '<button class="pcard press" data-a="seeMap" data-v="ig_' + c.id + '"><span class="pimg"><img src="' + c.foto + '" alt="IEANJESÚS ' + esc(c.nombre) + '" style="object-position:' + (c.fotoPos || "50% 50%") + '" loading="lazy"></span>' +
-          "<b>" + esc(c.nombre) + "</b><span>" + esc(c.pastor) + "</span></button>";
-      }).join("") + "</div>");
-
     // Para conocer y para comer, cerca del teatro
     var base = myBase();
-    var near = D.lugares.filter(function (l) { return l.foto && l.cat === "turismo"; }).sort(function (x, y) { return (y.imperdible ? 1 : 0) - (x.imperdible ? 1 : 0) || haversine(base, x) - haversine(base, y); }).slice(0, 10);
+    var near = D.lugares.filter(function (l) { return l.foto && l.cat === "turismo" && l.imperdible; }).sort(function (x, y) { return haversine(base, x) - haversine(base, y); });
     h += blk('<div class="pad"><h2 class="h">' + T("toVisit") + '</h2><p class="lede">Lo que no te podés perder, cerca del teatro.</p></div>' + placeCards(near));
     var eat = D.lugares.filter(function (l) { return l.foto && l.cat === "comida"; });
-    h += blk('<div class="pad"><h2 class="h">Para comer</h2><p class="lede">Zonas con muchas opciones cerca del teatro: elegí la que más te guste.</p></div>' + placeCards(eat));
+    h += blk('<div class="pad"><h2 class="h">Para comer</h2><p class="lede">Sectores con muchas opciones: elegí el que más te guste.</p></div>' + placeCards(eat));
 
     // Galería de la convención anterior
     h += blk('<div class="pad"><h2 class="h">' + T("ourConv") + '</h2><p class="lede">' + LT("Fotos de nuestra convención anterior · ", "Fotos da nossa convenção anterior · ") + esc(D.evento.anterior) + "</p></div>" +
@@ -491,9 +484,16 @@
         return '<figure class="gimg press" data-a="photo" data-v="' + esc(g.foto) + '"><img src="' + g.foto + '" alt="' + esc(g.texto) + '" loading="lazy"><figcaption>' + esc(g.texto) + "</figcaption></figure>";
       }).join("") + "</div>");
 
+    // Otras iglesias que vienen
+    h += blk('<div class="pad"><h2 class="h">Nuestras iglesias</h2><p class="lede">Las iglesias de todo el país que se encuentran en la convención.</p></div>' +
+      '<div class="hscroll">' + D.iglesias.map(function (c) {
+        return '<button class="pcard press" data-a="seeMap" data-v="ig_' + c.id + '"><span class="pimg"><img src="' + c.foto + '" alt="IEANJESÚS ' + esc(c.nombre) + '" style="object-position:' + (c.fotoPos || "50% 50%") + '" loading="lazy"></span>' +
+          "<b>" + esc(c.nombre) + "</b><span>" + esc(c.pastor) + "</span></button>";
+      }).join("") + "</div>");
+
     h += '<div class="pad">' + blk('<h2 class="h">' + T("useful") + '</h2><div class="rows">' +
       '<button class="row sos" data-a="sos">' + I.alert + '<span class="txt">' + T("sos") + "<small>" + T("sosSub") + "</small></span>" + I.chev.replace("<svg", '<svg class="chev"') + "</button>" +
-      consRow() + shareRow() + offlineRow() + installRow() + notifRow() + "</div>");
+      offlineRow() + installRow() + notifRow() + "</div>");
     if (D.demo) h += '<p class="foot">Versión de ejemplo: teléfonos y encargados de prueba.</p>';
     return h + "</div>";
   }
@@ -592,20 +592,24 @@
   function musicaHTML() {
     var M = window.MUSICA; if (!M) return "";
     var cultos = D.programa.filter(function (x) { return x.tipo === "culto"; }), chev = I.chev.replace("<svg", '<svg class="chev"');
-    function row(k, v) { return v ? '<div class="mus-row"><span>' + k + "</span><b>" + esc(v) + "</b></div>" : ""; }
+    // una canción: si la iglesia cargó la letra se despliega; si no, se busca
+    function song(s) {
+      if (s.letra) return '<details class="song"><summary>' + I.music + "<b>" + esc(s.titulo) + '</b></summary><div class="lyrics">' + esc(s.letra).replace(/\n/g, "<br>") + "</div></details>";
+      return '<a class="song" href="https://www.google.com/search?q=' + encodeURIComponent("letra " + s.titulo + " coro") + '" target="_blank" rel="noopener">' + I.music + "<b>" + esc(s.titulo) + "</b><small>" + LT("Ver letra", "Ver letra") + "</small></a>";
+    }
     var h = '<div class="pad mus"><h2 class="h">' + LT("Canciones de la convención", "Canções da convenção") + '</h2><div class="rows">' + M.repertorio.map(function (s) {
       return '<a class="row" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(s.titulo + " " + s.autor) + '" target="_blank" rel="noopener">' + I.music + '<span class="txt">' + esc(s.titulo) + "<small>" + esc(s.autor) + " · " + LT("escuchar", "ouvir") + "</small></span>" + chev + "</a>";
     }).join("") + "</div>";
-    h += '<h2 class="h">' + LT("Música de cada culto", "Música de cada culto") + "</h2>";
-    M.cultos.forEach(function (c, i) {
-      var cu = cultos[i];
-      h += '<details class="panel mus-culto"' + (i === 0 ? " open" : "") + "><summary><b>" + esc(cu ? cu.titulo : "Culto " + (i + 1)) + "</b><span>" + (cu ? esc(fmt(cu.fecha, { weekday: "short" }) + " " + cu.hora) : "") + "</span></summary>" +
-        row(LT("Vocalistas", "Vocalistas"), c.vocalistas.join(", ")) + row("Piano", c.piano.join(" · ")) + row(LT("Bajo", "Baixo"), c.bajo) + row(LT("Batería", "Bateria"), c.bateria) + row("Congas", c.congas) +
-        row(LT("Participaciones", "Participações"), (c.especiales || []).join(" · ")) +
-        (c.coros && c.coros.length ? '<div class="mus-coros"><small>' + LT("Coros", "Coros") + "</small><ul>" + c.coros.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>" : "") + "</details>";
-    });
-    h += '<h2 class="h">' + LT("Coros de avivamiento", "Coros de avivamento") + '</h2><div class="panel mus-list">' + M.avivamiento.map(function (g) { return "<div><small>" + esc(g.nombre) + "</small><p>" + g.coros.map(esc).join(" · ") + "</p></div>"; }).join("") + "</div>";
-    h += '<h2 class="h">' + LT("Adoración", "Adoração") + '</h2><p class="lede">' + LT("Peticiones y preludios", "Petições e prelúdios") + '</p><div class="panel mus-list"><div><p>' + M.adoracion.map(esc).join(" · ") + "</p></div></div>";
+    var withSongs = M.cultos.map(function (c, i) { return { c: c, cu: cultos[i] }; }).filter(function (x) { return x.c.coros.length; });
+    if (withSongs.length) {
+      h += '<h2 class="h">' + LT("Coros de cada culto", "Coros de cada culto") + "</h2>";
+      withSongs.forEach(function (x, i) {
+        h += '<details class="panel mus-culto"' + (i === 0 ? " open" : "") + "><summary><b>" + esc(x.cu ? x.cu.titulo : "Culto") + "</b><span>" + (x.cu ? esc(fmt(x.cu.fecha, { weekday: "short" }) + " " + x.cu.hora) : "") + "</span></summary>" + x.c.coros.map(song).join("") + "</details>";
+      });
+    }
+    h += '<h2 class="h">' + LT("Coros de avivamiento", "Coros de avivamento") + "</h2>";
+    M.avivamiento.forEach(function (g) { h += '<details class="panel mus-culto"><summary><b>' + esc(g.nombre) + "</b><span>" + g.coros.length + "</span></summary>" + g.coros.map(song).join("") + "</details>"; });
+    h += '<h2 class="h">' + LT("Adoración", "Adoração") + '</h2><details class="panel mus-culto"><summary><b>' + LT("Peticiones y preludios", "Petições e prelúdios") + "</b><span>" + M.adoracion.length + "</span></summary>" + M.adoracion.map(song).join("") + "</details>";
     return h + "</div>";
   }
 
@@ -819,11 +823,8 @@
     h += '<h2 class="h">Tu iglesia</h2><div class="panel team-list">' + personRow(contact("pas_" + p.id), "Pastor") + personRow(contact("enc_" + p.id), "Encargado de la convención") + "</div>";
     h += '<h2 class="h">Nacional</h2><div class="panel team-list">' + personRow(D.nacionalContacto, "Comisión de la convención") + "</div>";
     h += '<p class="foot" style="margin-top:12px">' + T("callsNote") + "</p>";
-    h += '<h2 class="h">Quiénes organizan</h2><p class="lede">Comisiones 2026: quiénes preparan la convención.</p><div class="panel team-list">';
-    D.comisiones.filter(function (c) { return !c.oculta; }).forEach(function (c) {
-      h += '<div class="com"><b>' + esc(c.nombre) + "</b><span>" + c.miembros.map(esc).join("<br>") + "</span></div>";
-    });
-    return h + "</div></div>";
+    h += '<div class="rows" style="margin-top:22px">' + consRow() + shareRow() + "</div>";
+    return h + "</div>";
   }
 
   /* ----- Mi iglesia ----- */
@@ -1355,7 +1356,7 @@
   /* ----- Guardar para usar sin internet ----- */
   /* El mapa de OpenStreetMap no permite descargar zonas enteras por adelantado:
      el portal guarda automáticamente las partes del mapa que la persona ya miró (sw.js). */
-  var SHELL = ["./", "index.html", "nacional.css", "app.js", "data.js", "manifest.webmanifest", "img/iglesias/maldonado.jpg", "img/iglesias/melo.jpg", "img/iglesias/acegua.jpg", "img/iglesias/treinta-y-tres.jpg", "img/iglesias/tacuarembo.jpg", "img/iglesias/artigas.jpg", "img/iglesias/salto.jpg", "img/iglesias/curva.jpg", "img/iglesias/el-cerro.jpg", "img/iglesias/la-paz.jpg", "../styles.css", "../fonts.css", "../musica.js", "../preparacion.js", "../notif.js", "../img/lugares/solis.jpg", "../img/lugares/centenario.jpg", "../vendor/leaflet/leaflet.js", "../vendor/leaflet/leaflet.css",
+  var SHELL = ["./", "index.html", "nacional.css", "app.js", "data.js", "manifest.webmanifest", "img/iglesias/maldonado.jpg", "img/iglesias/melo.jpg", "img/iglesias/acegua.jpg", "img/iglesias/treinta-y-tres.jpg", "img/iglesias/tacuarembo.jpg", "img/iglesias/artigas.jpg", "img/iglesias/salto.jpg", "img/iglesias/curva.jpg", "img/iglesias/el-cerro.jpg", "img/iglesias/la-paz.jpg", "../styles.css", "../fonts.css", "../musica.js", "../preparacion.js", "../notif.js", "../img/lugares/solis.jpg", "../img/lugares/mam.jpg", "../img/lugares/centenario.jpg", "../vendor/leaflet/leaflet.js", "../vendor/leaflet/leaflet.css",
     "../icons/icon-192.png", "../icons/icon-512.png", "../fonts/oswald-300_600.woff2", "../fonts/poppins-400.woff2", "../fonts/poppins-500.woff2", "../fonts/poppins-600.woff2", "../fonts/poppins-700.woff2",
     "../img/aplauso.jpg", "../img/artigas.jpg", "../img/culto1.jpg", "../img/culto2.jpg", "../img/culto4.jpg", "../img/familia.jpg", "../img/jovenes.jpg", "../img/logo.png", "../img/montevideo.jpg", "../img/musica.jpg", "../img/ofrenda.jpg", "../img/oracion2.jpg", "../img/predica.jpg", "../img/salon.jpg", "../img/teatro.jpg", "../img/lugares/18julio.jpg", "../img/lugares/ciudadvieja.jpg", "../img/lugares/legislativo.jpg", "../img/lugares/matriz.jpg", "../img/lugares/mercado.jpg", "../img/lugares/mirador.jpg", "../img/lugares/pocitos.jpg", "../img/lugares/rambla.jpg", "../img/lugares/rodo.jpg", "../img/lugares/s_puntacarretas.jpg", "../img/lugares/trescruces.jpg"];
   function saveOffline() {
@@ -1363,7 +1364,7 @@
     if (!("caches" in window)) return toast("Este navegador no permite guardar sin internet.");
     if (!navigator.onLine) return toast(T("offline"));
     S.dl = { done: 0, total: SHELL.length }; refreshOff();
-    caches.open("nac-shell-v2").then(function (shellC) {
+    caches.open("nac-shell-v3").then(function (shellC) {
       function step() { S.dl.done++; refreshOff(); }
       return Promise.all(SHELL.map(function (u) { return fetch(u, { cache: "reload" }).then(function (r) { if (r.ok) return shellC.put(u, r); }).catch(function () {}).then(step); }));
     }).then(function () {
