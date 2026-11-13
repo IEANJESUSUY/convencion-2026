@@ -1,6 +1,7 @@
 # Servidor local simple para probar la web (sin instalar nada).
 # Uso: powershell -ExecutionPolicy Bypass -File serve.ps1   ->  http://localhost:8080
 param([int]$Port = 8080)
+if ($env:PORT) { $Port = [int]$env:PORT }
 $root = Join-Path $PSScriptRoot "web"
 $types = @{ ".html"="text/html; charset=utf-8"; ".js"="application/javascript; charset=utf-8"; ".css"="text/css; charset=utf-8";
   ".json"="application/json"; ".webmanifest"="application/manifest+json"; ".png"="image/png"; ".svg"="image/svg+xml"; ".ico"="image/x-icon" }
@@ -12,7 +13,7 @@ while ($listener.IsListening) {
   $ctx = $listener.GetContext()
   try {
     $path = [Uri]::UnescapeDataString($ctx.Request.Url.AbsolutePath.TrimStart('/'))
-    if ($path -eq "") { $path = "index.html" }
+    if ($path -eq "" -or $path.EndsWith("/")) { $path = $path + "index.html" }
     $file = [IO.Path]::GetFullPath((Join-Path $root $path))
     if ($file.StartsWith($root) -and (Test-Path $file -PathType Leaf)) {
       $bytes = [IO.File]::ReadAllBytes($file)

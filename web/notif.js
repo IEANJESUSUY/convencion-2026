@@ -17,8 +17,8 @@
   function hm(d) { return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
 
   function plan(D, pid, lang) {
-    var p = byId(D.personas, pid); if (!p) return [];
-    var pt = lang === "pt", out = [], name = first(p.nombre);
+    var p = byId(D.personas, pid) || byId(D.iglesias, pid); if (!p) return [];
+    var pt = lang === "pt", out = [], name = p.saludo || first(p.nombre), los = !!p.saludo;
     function L(es, x) { return pt ? x : es; }
     function placeName(id) { var x = byId(D.lugares, id) || byId(D.alojamientos, id); return x ? x.nombre : ""; }
     function add(k, at, win, title, body, tab) { out.push({ k: k, at: at.getTime(), win: win, title: title, body: body, tab: tab || "inicio" }); }
@@ -45,8 +45,14 @@
         if (n === 1) add("cd1", d, 14 * H, L("¡Mañana empieza la convención!", "Amanhã começa a convenção!"),
           L("Mañana a las " + first0.hora + " nos encontramos en el Teatro Cervantes. Tocá para ver el programa.", "Amanhã às " + first0.hora + " nos encontramos no Teatro Cervantes. Toque para ver a programação."), "programa");
         else add("cd" + n, d, 14 * H, L("Faltan " + n + " días para la convención", "Faltam " + n + " dias para a convenção"),
-          L(name + ", te estamos esperando con mucha alegría. «" + D.evento.lema + "»", name + ", estamos esperando você com muita alegria. «" + D.evento.lema + "»"), "inicio");
+          L(name + (los ? ", los" : ", te") + " estamos esperando con mucha alegría. «" + D.evento.lema + "»", name + ", estamos esperando você com muita alegria. «" + D.evento.lema + "»"), "inicio");
       });
+    }
+
+    // Un día antes: pedir fotos de los preparativos (versión nacional)
+    if (D.evento.fotosAntes && first0) {
+      var fa = new Date(start(first0)); fa.setDate(fa.getDate() - 1); fa.setHours(18, 0, 0, 0);
+      add("fotos", fa, 6 * H, "Mandanos tus fotos", "¿Cómo van los preparativos? Mandanos una foto de tu iglesia preparándose para la convención. Tocá acá.", "inicio");
     }
 
     // Lo que hacemos hoy
@@ -89,7 +95,7 @@
 
   /* Lo que el celular recuerda para los avisos (persona, idioma y avisos ya mostrados).
      Se guarda en el almacenamiento del portal para que el service worker también lo lea. */
-  var META = "conv-meta", KEY = "avisos.json";
+  var META = g.NOTIF_CACHE || "conv-meta", KEY = "avisos.json";
   function getMeta() {
     if (typeof caches === "undefined") return Promise.resolve({});
     return caches.open(META).then(function (c) { return c.match(KEY); }).then(function (r) { return r ? r.json() : {}; }).catch(function () { return {}; });
@@ -110,7 +116,7 @@
       return setMeta(m).then(function () { return pick; });
     });
   }
-  function options(n) { return { body: n.body, icon: "icons/icon-192.png", tag: n.k, data: { tab: n.tab || "inicio" } }; }
+  function options(n) { return { body: n.body, icon: g.NOTIF_ICON || "icons/icon-192.png", tag: n.k, data: { tab: n.tab || "inicio" } }; }
 
   g.CONV_NOTIF = { plan: plan, check: check, getMeta: getMeta, setMeta: setMeta, options: options };
 })(typeof self !== "undefined" ? self : window);

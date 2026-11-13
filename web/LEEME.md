@@ -65,3 +65,10 @@ HTTPS es necesario para que funcione sin internet y se pueda instalar como app.
 - Los avisos se calculan en cada celular a partir del programa (`notif.js`): días que faltan, lo de hoy, 20 min antes de cultos y vans, «Esperamos que el culto haya sido de gran bendición…» y el agradecimiento final.
 - Sin servidor, los avisos llegan cuando el portal está abierto o vuelve a abrirse; en Android instalado, además, el teléfono lo despierta de vez en cuando. En iPhone solo se ven con el portal instalado.
 - Al terminar la convención, Inicio muestra el agradecimiento y el botón para mandar fotos y testimonios al WhatsApp de `evento.comunicaciones` (data.js).
+
+## Versión nacional (carpeta `nacional/`)
+
+- Enlace: `.../convencion-2026/nacional/`. Un perfil por iglesia, sin clave: se toca la foto de la iglesia.
+- Datos en `nacional/data.js`: iglesias (pastor, dirección, horarios, encargado de la convención), comisiones (solo nombres), cultos y lugares. Teléfonos y encargados son de ejemplo mientras `demo: true`.
+- Usa las fotos, fuentes, estilos y `notif.js` de la carpeta principal; guarda sus datos aparte (`nac_`), así no se mezcla con el portal de delegaciones.
+- `#desde-cero` también funciona: `.../nacional/#desde-cero`.
