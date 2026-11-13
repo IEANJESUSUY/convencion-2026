@@ -31,7 +31,7 @@
   --gut: 20px;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; height: 100%; }
+html, body { margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none; }
 body { font-family: var(--text); color: var(--ink); background: #0d0605; -webkit-font-smoothing: antialiased; overscroll-behavior-y: none; font-size: 16px; }
 button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
 a { color: inherit; text-decoration: none; }
@@ -40,7 +40,8 @@ svg { display: block; }
 img { display: block; max-width: 100%; }
 :focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
-.app { position: relative; max-width: 480px; margin: 0 auto; height: 100vh; height: 100dvh; overflow: hidden; background: var(--cream); }
+/* La app ocupa siempre la pantalla visible: la página nunca se desplaza, así la barra de abajo queda fija */
+.app { position: fixed; top: 0; bottom: 0; left: 0; right: 0; max-width: 480px; margin: 0 auto; overflow: hidden; background: var(--cream); }
 .screen { position: absolute; inset: 0; display: flex; flex-direction: column; }
 
 /* ---------- Movimiento ---------- */
@@ -650,3 +651,9 @@ h2.h { font-family: var(--display); font-weight: 400; font-size: 26px; text-tran
 .thanks-in small { display: block; text-align: center; font-size: 12.5px; color: rgba(255,255,255,.6); margin-top: 8px; }
 .thanks-in .thanks-note { font-size: 13px; color: rgba(255,255,255,.65); border-top: 1px solid rgba(255,255,255,.12); padding-top: 12px; margin-top: 16px; }
 .welcome-body.inst .btn-row { position: sticky; bottom: calc(-1 * (var(--safe-b) + 24px)); z-index: 2; margin-left: calc(-1 * var(--gut)); margin-right: calc(-1 * var(--gut)); padding: 26px var(--gut) calc(var(--safe-b) + 14px); background: linear-gradient(to bottom, rgba(26,11,9,0), var(--night) 34%); }
+
+/* Gestos: la barra de abajo y las rayitas de las hojas no mueven ni recargan la página */
+.nav { touch-action: none; }
+.handle, .grab { touch-action: none; }
+.grab { flex: none; height: 22px; display: flex; align-items: center; justify-content: center; }
+.grab::before { content: ""; width: 42px; height: 5px; border-radius: 3px; background: #D9CCBE; }

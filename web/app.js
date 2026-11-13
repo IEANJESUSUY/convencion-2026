@@ -463,12 +463,6 @@
     }
     h += "</div>";
 
-    // Galería de la convención anterior (fotos completas, sin recortar)
-    h += blk('<div class="pad"><h2 class="h">' + T("ourConv") + '</h2><p class="lede">' + esc(D.evento.anterior) + "</p></div>" +
-      '<div class="hscroll gallery">' + (D.galeria || []).map(function (g) {
-        return '<figure class="gimg press" data-a="photo" data-v="' + esc(g.foto) + '"><img src="' + g.foto + '" alt="' + esc(g.texto) + '" loading="lazy"><figcaption>' + esc(g.texto) + "</figcaption></figure>";
-      }).join("") + "</div>");
-
     // Para conocer cerca del alojamiento
     var base = myBase();
     var near = D.lugares.filter(function (l) { return l.foto && l.cat === "turismo"; }).sort(function (x, y) { return haversine(base, x) - haversine(base, y); }).slice(0, 8);
@@ -476,8 +470,13 @@
     var far = D.lugares.filter(function (l) { return l.foto && l.cat === "excursion"; });
     h += blk('<div class="pad"><h2 class="h">' + T("trips") + '</h2><p class="lede">' + T("tripsSub") + "</p></div>" + placeCards(far));
 
+    // Galería de la convención anterior (fotos completas, sin recortar)
+    h += blk('<div class="pad"><h2 class="h">' + T("ourConv") + '</h2><p class="lede">' + esc(D.evento.anterior) + "</p></div>" +
+      '<div class="hscroll gallery">' + (D.galeria || []).map(function (g) {
+        return '<figure class="gimg press" data-a="photo" data-v="' + esc(g.foto) + '"><img src="' + g.foto + '" alt="' + esc(g.texto) + '" loading="lazy"><figcaption>' + esc(g.texto) + "</figcaption></figure>";
+      }).join("") + "</div>");
+
     h += '<div class="pad">' + blk('<h2 class="h">' + T("useful") + '</h2><div class="rows">' +
-      '<button class="row" data-a="wifi">' + I.wifi + '<span class="txt">' + T("wifi") + "<small>" + T("wifiSub") + "</small></span>" + I.chev.replace("<svg", '<svg class="chev"') + "</button>" +
       '<button class="row sos" data-a="sos">' + I.alert + '<span class="txt">' + T("sos") + "<small>" + T("sosSub") + "</small></span>" + I.chev.replace("<svg", '<svg class="chev"') + "</button>" +
       offlineRow() + installRow() + notifRow() + "</div>");
     if (D.demo) h += '<p class="foot">' + T("demoNote") + "</p>";
@@ -545,7 +544,7 @@
       var pics = fotos.length > 1
         ? '<div class="detail-strip">' + fotos.map(function (f) { return '<img src="' + f + '" alt="' + esc(pl.nombre) + '">'; }).join("") + "</div>"
         : fotos.length ? '<div class="detail-img"><img src="' + fotos[0] + '" alt="' + esc(pl.nombre) + '"></div>' : "";
-      return '<div class="sheet-body detail-in">' + pics + (pl.cred ? '<div class="cred">Foto: ' + esc(pl.cred) + " · Wikimedia Commons</div>" : "") +
+      return '<div class="grab" aria-hidden="true"></div><div class="sheet-body detail-in">' + pics + (pl.cred ? '<div class="cred">Foto: ' + esc(pl.cred) + " · Wikimedia Commons</div>" : "") +
         '<div class="detail-head"><div><small><i style="background:' + cat.c + '"></i>' + cat[S.lang] + "</small><h3>" + esc(pl.nombre) + "</h3></div>" +
         '<button class="close" aria-label="' + T("close") + '" data-a="closePlace">' + I.x + "</button></div>" +
         '<p class="detail-desc">' + esc(pl.desc || "") + "</p>" +
@@ -632,31 +631,45 @@
     var sh = document.getElementById("sheet");
     if (!sh || sh._drag) return;
     sh._drag = true;
-    var y0 = null, base = 0, moved = false;
+    // El gesto lo maneja el portal (preventDefault): así bajar la hoja nunca recarga la página
+    var y0 = null, base = 0, moved = false, fromBody = false;
     sh.addEventListener("touchstart", function (e) {
-      if (S.place || !e.target.closest(".handle")) return;
+      var onGrab = e.target.closest(".handle, .grab");
+      var body = sh.querySelector(".sheet-body");
+      fromBody = false;
+      if (S.place) {
+        // ficha de un lugar: se baja desde la rayita o desde arriba del todo del contenido
+        if (!onGrab && !(body && body.scrollTop <= 0)) return;
+        fromBody = !onGrab; base = 0;
+      } else {
+        if (!onGrab) return;
+        base = S.sheetOpen ? 0 : sh.offsetHeight - 84;
+      }
       y0 = e.touches[0].clientY; moved = false;
-      base = S.sheetOpen ? 0 : sh.offsetHeight - 84;
       sh.style.transition = "none";
     }, { passive: true });
     sh.addEventListener("touchmove", function (e) {
       if (y0 === null) return;
       var dy = e.touches[0].clientY - y0;
+      if (fromBody && !moved && dy < 0) { y0 = null; sh.style.transition = ""; return; } // hacia arriba: dejar que el contenido se desplace
       if (Math.abs(dy) > 6) moved = true;
-      var y = Math.max(0, Math.min(sh.offsetHeight - 84, base + dy));
+      if (e.cancelable) e.preventDefault();
+      var y = S.place ? Math.max(0, dy) : Math.max(0, Math.min(sh.offsetHeight - 84, base + dy));
       sh.style.transform = "translateY(" + y + "px)";
-    }, { passive: true });
-    sh.addEventListener("touchend", function (e) {
+    }, { passive: false });
+    function endDrag(e) {
       if (y0 === null) return;
-      var dy = e.changedTouches[0].clientY - y0;
+      var dy = (e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientY : y0) - y0;
       sh.style.transition = ""; sh.style.transform = "";
       y0 = null;
-      if (moved) {
-        S.sheetOpen = dy < 0 ? true : dy > 0 ? false : S.sheetOpen;
-        sh._swallow = true; setTimeout(function () { sh._swallow = false; }, 350);
-        renderSheet();
-      }
-    });
+      if (!moved) return;
+      sh._swallow = true; setTimeout(function () { sh._swallow = false; }, 350);
+      if (S.place) { if (dy > 70) { S.place = null; renderSheet(); } return; }
+      S.sheetOpen = dy < 0 ? true : dy > 0 ? false : S.sheetOpen;
+      renderSheet();
+    }
+    sh.addEventListener("touchend", endDrag);
+    sh.addEventListener("touchcancel", endDrag);
   }
   // centro del mapa corrido para que el punto quede visible por encima de la hoja de abajo
   function above(ll, z, cover) {
@@ -736,10 +749,11 @@
       '<button class="row" data-a="tour">' + I.map + '<span class="txt">' + LT("Ver el paseo guiado", "Ver o tour guiado") + "<small>" + LT("El portal se recorre solo, en medio minuto", "O portal se apresenta sozinho, em meio minuto") + "</small></span></button>" +
       offlineRow() + installRow() + notifRow() +
       (D.demo ? '<button class="row" data-a="sim">' + I.cal + '<span class="txt">' + LT("Probar: simular la hora", "Testar: simular a hora") + "<small>" + LT("Para ver Inicio como durante la convención", "Para ver o Início como durante a convenção") + '</small></span><span class="end">' + esc(simLabel()) + "</span></button>" : "") +
-      '<button class="row sos" data-a="logout">' + I.out + '<span class="txt">' + T("switchUser") + "</span></button></div>";
+      "</div>";
     var cred = D.lugares.filter(function (l) { return l.cred; });
     h += '<details class="credits"><summary>' + T("credits") + "</summary><p>" + T("creditsSub") + "</p><ul>" +
       cred.map(function (l) { return "<li><b>" + esc(l.nombre) + "</b> · " + esc(l.cred) + "</li>"; }).join("") + "</ul><p>" + T("mapBy") + "</p></details>";
+    h += '<div class="rows" style="margin-top:22px"><button class="row sos" data-a="logout">' + I.out + '<span class="txt">' + LT("Cerrar sesión", "Sair") + "<small>" + LT("El portal vuelve a empezar desde el principio", "O portal recomeça desde o início") + "</small></span></button></div>";
     h += '<div class="brand-foot"><img src="' + esc(D.evento.logo) + '" alt="' + esc(D.evento.iglesia) + '"><p>' + esc(D.evento.nombre) + " · «" + esc(D.evento.lema) + "»" + (D.demo ? "<br>" + T("demoNote") : "") + "</p></div>";
     return h + "</div>";
   }
@@ -890,9 +904,8 @@
         '<div class="bot-acts">' + btn("seeMap", a.id, I.pin + T("seeMap")) + btn("dir", a.id, I.nav + T("directions")) + "</div>";
     }
     // 9. WiFi
-    if (has(/wifi|wi fi|internet|clave|contrasena|senha|\bred\b|\brede\b/)) {
-      return (D.evento.wifi || []).map(function (w) { return "<b>" + esc(w.lugar) + "</b>: " + T("network") + " " + esc(w.red) + " · " + T("password") + " " + esc(w.clave); }).join("<br>") +
-        '<div class="bot-acts">' + btn("wifi", "", I.wifi + T("wifiTitle")) + "</div>";
+    if (has(/wifi|wi fi|internet|contrasena do wifi|\bred\b|\brede\b/)) {
+      return LT("Los datos del <b>WiFi</b> te los damos personalmente cuando llegás. Si todavía no los tenés, escribile a tu encargado:", "Os dados do <b>WiFi</b> são entregues pessoalmente quando você chega. Se ainda não recebeu, escreva para o seu responsável:") + encargadoBtns();
     }
     // 10. Iglesias
     if (has(/iglesia|igreja|curva|maronas|ieanjesus/)) {
@@ -940,8 +953,8 @@
     return LT("No estoy seguro de haber entendido. Probá con una de estas preguntas, o escribile directamente a tu encargado:", "Não tenho certeza se entendi. Tente uma destas perguntas ou escreva direto para o seu responsável:") + encargadoBtns();
   }
   var QUICK = {
-    es: ["¿Qué sigue ahora?", "¿A qué hora son los cultos?", "¿Dónde comemos?", "¿Cuándo salen las vans?", "Mi habitación", "Mi llegada", "WiFi", "Lugares para conocer", "Cambio de dinero", "Emergencia"],
-    pt: ["O que vem agora?", "Que horas são os cultos?", "Onde vamos comer?", "Quando saem as vans?", "Meu quarto", "Minha chegada", "WiFi", "Lugares para conhecer", "Câmbio de dinheiro", "Emergência"]
+    es: ["¿Qué sigue ahora?", "¿A qué hora son los cultos?", "¿Dónde comemos?", "¿Cuándo salen las vans?", "Mi habitación", "Mi llegada", "Lugares para conocer", "Cambio de dinero", "Emergencia"],
+    pt: ["O que vem agora?", "Que horas são os cultos?", "Onde vamos comer?", "Quando saem as vans?", "Meu quarto", "Minha chegada", "Lugares para conhecer", "Câmbio de dinheiro", "Emergência"]
   };
   function chatGreeting() {
     var p = person(), e = encargado();
@@ -1369,7 +1382,15 @@
       case "tour": startTour(); break;
       case "offline": saveOffline(); break;
       case "install": doInstall(); break;
-      case "logout": store.del("person"); store.del("lang"); S.personId = null; S.country = null; S.lang = "es"; S.view = "flags"; render(); break;
+      case "logout":
+        modal("<h3>" + LT("¿Cerrar sesión?", "Sair?") + "</h3><p>" + LT("El portal va a empezar de nuevo, como la primera vez: vas a elegir tu bandera, tu nombre y poner tu PIN.", "O portal vai recomeçar como na primeira vez: você vai escolher sua bandeira, seu nome e digitar seu PIN.") + "</p>" +
+          '<div class="btn-row"><button class="btn btn-primary press" data-a="logoutYes">' + I.out + LT("Cerrar sesión", "Sair") + "</button></div>");
+        break;
+      case "logoutYes":
+        resetAll();
+        S.personId = null; S.country = null; S.lang = "es"; S.tab = "inicio"; S.fakeNow = null; S.place = null; S.day = null; S.offlineReady = false;
+        render._last = null; S.view = "splash"; render();
+        break;
     }
   });
   function endTutorial() { store.set("seen_" + S.personId, true); S.view = "app"; S.tab = "inicio"; render(); if (!store.get("tourDone_" + S.personId)) setTimeout(startTour, 900); }
@@ -1412,13 +1433,15 @@
   /* ---------------- Arranque ---------------- */
   // Enlace secreto para probar como alguien nuevo: index.html#desde-cero
   // Borra lo que este teléfono recuerda (persona, idioma, bienvenidas vistas) cada vez que se abre con ese enlace.
-  if (/(^|[#&?])desde-cero\b/.test(location.hash + "&" + location.search.slice(1))) {
+  // También lo usa «Cerrar sesión» en Perfil. (Lo guardado para usar sin internet se conserva.)
+  function resetAll() {
     try {
       Object.keys(localStorage).forEach(function (k) { if (k.indexOf("conv_") === 0) localStorage.removeItem(k); });
       Object.keys(sessionStorage).forEach(function (k) { if (k.indexOf("conv_") === 0) sessionStorage.removeItem(k); });
       if (window.caches) caches.delete("conv-meta");
     } catch (e) {}
   }
+  if (/(^|[#&?])desde-cero\b/.test(location.hash + "&" + location.search.slice(1))) resetAll();
 
   /* La portada «Bienvenidos al Uruguay» no aparece cada vez que se abre el portal. Vuelve a aparecer:
      - la primera vez,
