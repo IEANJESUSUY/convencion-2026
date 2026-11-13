@@ -1356,7 +1356,7 @@
   /* ----- Guardar para usar sin internet ----- */
   /* El mapa de OpenStreetMap no permite descargar zonas enteras por adelantado:
      el portal guarda automáticamente las partes del mapa que la persona ya miró (sw.js). */
-  var SHELL = ["./", "index.html", "nacional.css", "app.js", "data.js", "manifest.webmanifest", "img/iglesias/maldonado.jpg", "img/iglesias/melo.jpg", "img/iglesias/acegua.jpg", "img/iglesias/treinta-y-tres.jpg", "img/iglesias/tacuarembo.jpg", "img/iglesias/artigas.jpg", "img/iglesias/salto.jpg", "img/iglesias/curva.jpg", "img/iglesias/el-cerro.jpg", "img/iglesias/la-paz.jpg", "../styles.css", "../fonts.css", "../musica.js", "../preparacion.js", "../notif.js", "../img/lugares/solis.jpg", "../img/lugares/mam.jpg", "../img/lugares/centenario.jpg", "../vendor/leaflet/leaflet.js", "../vendor/leaflet/leaflet.css",
+  var SHELL = ["./", "index.html", "nacional.css", "app.js", "data.js", "manifest.webmanifest", "img/iglesias/maldonado.jpg", "img/iglesias/melo.jpg", "img/iglesias/acegua.jpg", "img/iglesias/treinta-y-tres.jpg", "img/iglesias/tacuarembo.jpg", "img/iglesias/artigas.jpg", "img/iglesias/salto.jpg", "img/iglesias/curva.jpg", "img/iglesias/el-cerro.jpg", "img/iglesias/la-paz.jpg", "../styles.css", "../fonts.css", "../musica.js", "../preparacion.js", "../hoja.js", "../notif.js", "../img/lugares/solis.jpg", "../img/lugares/mam.jpg", "../img/lugares/centenario.jpg", "../vendor/leaflet/leaflet.js", "../vendor/leaflet/leaflet.css",
     "../icons/icon-192.png", "../icons/icon-512.png", "../fonts/oswald-300_600.woff2", "../fonts/poppins-400.woff2", "../fonts/poppins-500.woff2", "../fonts/poppins-600.woff2", "../fonts/poppins-700.woff2",
     "../img/aplauso.jpg", "../img/artigas.jpg", "../img/culto1.jpg", "../img/culto2.jpg", "../img/culto4.jpg", "../img/familia.jpg", "../img/jovenes.jpg", "../img/logo.png", "../img/montevideo.jpg", "../img/musica.jpg", "../img/ofrenda.jpg", "../img/oracion2.jpg", "../img/predica.jpg", "../img/salon.jpg", "../img/teatro.jpg", "../img/lugares/18julio.jpg", "../img/lugares/ciudadvieja.jpg", "../img/lugares/legislativo.jpg", "../img/lugares/matriz.jpg", "../img/lugares/mercado.jpg", "../img/lugares/mirador.jpg", "../img/lugares/pocitos.jpg", "../img/lugares/rambla.jpg", "../img/lugares/rodo.jpg", "../img/lugares/s_puntacarretas.jpg", "../img/lugares/trescruces.jpg"];
   function saveOffline() {
@@ -1364,7 +1364,7 @@
     if (!("caches" in window)) return toast("Este navegador no permite guardar sin internet.");
     if (!navigator.onLine) return toast(T("offline"));
     S.dl = { done: 0, total: SHELL.length }; refreshOff();
-    caches.open("nac-shell-v3").then(function (shellC) {
+    caches.open("nac-shell-v4").then(function (shellC) {
       function step() { S.dl.done++; refreshOff(); }
       return Promise.all(SHELL.map(function (u) { return fetch(u, { cache: "reload" }).then(function (r) { if (r.ok) return shellC.put(u, r); }).catch(function () {}).then(step); }));
     }).then(function () {
@@ -1529,6 +1529,12 @@
   var irM = /[#&]ir=(\w+)/.exec(location.hash);
   if (irM && TAB_ORDER.indexOf(irM[1]) >= 0) { S.tab = irM[1]; try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} }
   setTimeout(notifyCheck, 2500);
+  // Planilla en línea: si hay cambios, se redibuja con los datos nuevos
+  function hojaChanged() {
+    if (S.personId && !person()) { S.personId = null; store.del("person"); if (S.view === "app") S.view = "flags"; }
+    if (S.view === "app" || S.view === "flags" || S.view === "names") { render(); if (S.view === "app") toast(LT("Información actualizada", "Informação atualizada")); }
+  }
+  if (window.HOJA_REFRESH) { setTimeout(function () { HOJA_REFRESH(hojaChanged); }, 800); document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") HOJA_REFRESH(hojaChanged); }); }
   // Solo en la versión de ejemplo: abrir una pantalla directa para revisar el diseño (#s=app&p=br1&t=mapa)
   var q = D.demo && location.hash.length > 1 ? location.hash.slice(1).split("&").reduce(function (o, kv) { var x = kv.split("="); o[x[0]] = decodeURIComponent(x[1] || ""); return o; }, {}) : null;
   if (q && q.s) {

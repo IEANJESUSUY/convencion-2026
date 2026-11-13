@@ -4,10 +4,10 @@ self.NOTIF_CACHE = "nac-meta";
 self.NOTIF_ICON = "../icons/icon-192.png";
 importScripts("../preparacion.js", "../notif.js");
 
-var SHELL = "nac-shell-v3";
+var SHELL = "nac-shell-v4";
 var TILES = "conv-tiles-v2"; // el mapa se comparte con el portal de delegaciones
 var FILES = ["./", "index.html", "nacional.css", "app.js", "data.js", "manifest.webmanifest",
-  "../styles.css", "../fonts.css", "../musica.js", "../preparacion.js", "../notif.js", "../vendor/leaflet/leaflet.js", "../vendor/leaflet/leaflet.css",
+  "../styles.css", "../fonts.css", "../musica.js", "../preparacion.js", "../hoja.js", "../notif.js", "../vendor/leaflet/leaflet.js", "../vendor/leaflet/leaflet.css",
   "../icons/icon-192.png", "../fonts/oswald-300_600.woff2", "../fonts/poppins-400.woff2", "../fonts/poppins-500.woff2", "../fonts/poppins-600.woff2", "../fonts/poppins-700.woff2",
   "img/iglesias/maldonado.jpg", "img/iglesias/melo.jpg", "img/iglesias/acegua.jpg", "img/iglesias/treinta-y-tres.jpg", "img/iglesias/tacuarembo.jpg",
   "img/iglesias/artigas.jpg", "img/iglesias/salto.jpg", "img/iglesias/curva.jpg", "img/iglesias/el-cerro.jpg", "img/iglesias/la-paz.jpg",

@@ -4,10 +4,10 @@
    - Avisos: ver notif.js. */
 importScripts("preparacion.js", "notif.js");
 
-var SHELL = "conv-shell-v7";
+var SHELL = "conv-shell-v8";
 var TILES = "conv-tiles-v2"; // v2: se descarta lo guardado antes (incluía imágenes de "Access blocked")
 var META = "conv-meta";      // persona, idioma y avisos ya mostrados
-var FILES = ["./", "index.html", "styles.css", "fonts.css", "app.js", "data.js", "musica.js", "preparacion.js", "notif.js", "manifest.webmanifest", "vendor/leaflet/leaflet.js", "vendor/leaflet/leaflet.css",
+var FILES = ["./", "index.html", "styles.css", "fonts.css", "app.js", "data.js", "musica.js", "preparacion.js", "hoja.js", "notif.js", "manifest.webmanifest", "vendor/leaflet/leaflet.js", "vendor/leaflet/leaflet.css",
     "icons/icon-192.png", "icons/icon-512.png", "fonts/oswald-300_600.woff2", "fonts/poppins-400.woff2", "fonts/poppins-500.woff2", "fonts/poppins-600.woff2", "fonts/poppins-700.woff2",
     "img/aeropuerto.jpg", "img/aplauso.jpg", "img/artigas.jpg", "img/buquebus.jpg", "img/cerro.jpg", "img/culto1.jpg", "img/culto2.jpg", "img/culto4.jpg", "img/curva-grupo.jpg", "img/curva.jpg", "img/familia.jpg", "img/hotel.jpg", "img/jovenes.jpg", "img/logo.png", "img/montevideo.jpg", "img/musica.jpg", "img/ofrenda.jpg", "img/oracion2.jpg", "img/predica.jpg", "img/salon.jpg", "img/teatro.jpg", "img/lugares/18julio.jpg", "img/lugares/atlantida.jpg", "img/lugares/casapueblo.jpg", "img/lugares/centenario.jpg", "img/lugares/cerro.jpg", "img/lugares/ciudadvieja.jpg", "img/lugares/colonia.jpg", "img/lugares/legislativo.jpg", "img/lugares/matriz.jpg", "img/lugares/mercado.jpg", "img/lugares/mirador.jpg", "img/lugares/piriapolis.jpg", "img/lugares/pocitos.jpg", "img/lugares/punta.jpg", "img/lugares/rambla.jpg", "img/lugares/rodo.jpg", "img/lugares/solis.jpg", "img/lugares/mam.jpg", "img/lugares/s_puntacarretas.jpg", "img/lugares/trescruces.jpg"];
 

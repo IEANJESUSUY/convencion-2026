@@ -9,6 +9,8 @@
    ===================================================================== */
 window.DATA = {
   demo: true,
+  // Planilla en línea (Google Sheets). Vacío = usa los datos de este archivo. Ver hoja.js y LEEME.md
+  hoja: { id: "" },
   nacional: true,
 
   evento: {

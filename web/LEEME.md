@@ -72,3 +72,11 @@ HTTPS es necesario para que funcione sin internet y se pueda instalar como app.
 - Datos en `nacional/data.js`: iglesias (pastor, dirección, horarios, encargado de la convención), comisiones (solo nombres), cultos y lugares. Teléfonos y encargados son de ejemplo mientras `demo: true`.
 - Usa las fotos, fuentes, estilos y `notif.js` de la carpeta principal; guarda sus datos aparte (`nac_`), así no se mezcla con el portal de delegaciones.
 - `#desde-cero` también funciona: `.../nacional/#desde-cero`.
+
+## Planilla en línea (Google Sheets)
+
+- Plantilla: `Plantilla_Base_de_Datos_Portal.xlsx` (no se sube a GitHub). Pestañas: Evento, Avisos, Programa, Contactos, Personas, Alojamientos, Iglesias, Letras.
+- Se sube a Google Drive, se abre como Hoja de cálculo de Google y se comparte como «Cualquier persona con el enlace: Lector».
+- El ID de la planilla (entre `/d/` y `/edit` en el enlace) va en `hoja: { id: "..." }` de `data.js` y de `nacional/data.js`.
+- `hoja.js` la lee al abrir el portal (y al volver a él), la guarda en el celular para usarla sin internet y reemplaza los datos de ejemplo. Lo que la planilla no trae (fotos, mapa, lugares) sale de data.js.
+- Pestañas vacías o que no cargan: se usa lo último guardado o, si no hay, data.js.
